@@ -1,5 +1,5 @@
 from nose2.tools import *
-import ConnectedRace
+import connectedrace
 
 def setup():
     print("SETUP!")
