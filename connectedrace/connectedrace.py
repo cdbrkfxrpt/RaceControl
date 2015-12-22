@@ -14,34 +14,10 @@ def main():
 
     buffer = can.BufferedReader()
     printer = can.Printer()
-    # csvwrite = can.CSVWriter('log.csv')
-    # sqlitewrite = can.SqliteWriter('log.sqlite')
+    csvlog = CSVLogger('log.csv')
+    sqlitelog = SQLiteLogger('log.db')
 
-    # notifier = can.Notifier(bus, [buffer, printer, csvwrite, sqlitewrite])
-    i = 0
-    while(i < 1):
-        notifier = can.Notifier(bus, [buffer, printer])
-        time.sleep(1)
-        i += 1
-    # notifier = can.Notifier(bus, [csvwrite])
-
-    msg = buffer.get_message()
-
-    print(msg , ' -- from buffer')
-
-    f = open('log2.csv', 'wt')
-    f.write('timestamp, is_remote_frame, id_type, is_error_frame, arbitration_id, dlc, data\n')
-    row = ','.join(str(el) for el in [  msg.timestamp,
-                                        msg.is_remote_frame,
-                                        msg.id_type,
-                                        msg.is_error_frame,
-                                        msg.arbitration_id,
-                                        msg.dlc,
-                                        ''.join('%.2x' % byte for byte in msg.data)
-                                     ])
-    f.write(row + '\n')
-    f.close()
-
+    notifier = can.Notifier(bus, [buffer, printer, csvwrite, sqlitewrite])
 
 if __name__ == "__main__":
     main()

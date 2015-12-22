@@ -1,4 +1,4 @@
-jry:
+try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
@@ -10,7 +10,7 @@ config = {
     'download_url': 'git.nrmncr.net/ConnectedRace',
     'author_email': 'flrn@nrmncr.net',
     'version': '0.1',
-    'install_requires': ['pytest','python-can'],
+    'install_requires': ['nose2','python-can','arrow'],
     'packages': ['connectedrace'],
     'scripts': [],
     'name': 'ConnectedRace'
