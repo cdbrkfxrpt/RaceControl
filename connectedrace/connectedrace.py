@@ -1,5 +1,5 @@
 import can
-import time
+import logger
 
 def main():
     can_interface = 'vcan0'
@@ -13,11 +13,14 @@ def main():
         print("Message sent")
 
     buffer = can.BufferedReader()
-    printer = can.Printer()
-    csvlog = CSVLogger('log.csv')
-    sqlitelog = SQLiteLogger('log.db')
+    csvlog = logger.CSVLogger('log.csv')
+    sqlitelog = logger.SQLiteLogger('log.db')
 
-    notifier = can.Notifier(bus, [buffer, printer, csvwrite, sqlitewrite])
+    notifier = can.Notifier(bus, [buffer, csvlog, sqlitelog], 15)
+
+    for msg in iter(buffer.get_message, None):
+        print(msg)
 
 if __name__ == "__main__":
     main()
+
