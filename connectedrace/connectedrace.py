@@ -1,6 +1,7 @@
 import can
 import logger
 import antenna
+import cable
 import time
 
 def main():
@@ -21,25 +22,24 @@ def main():
     # massacre(cableslave, antennaslave, loggingslave)
     #
 
-    can_interface = 'vcan0'
-    bus = can.interface.Bus(can_interface, bustype='socketcan_native')
+    msglist = [ can.Message(arbitration_id=0xc0ffee,
+                            data=[0, 25, 0, 1, 3, 1, 4, 1],
+                            extended_id=False) ]
 
-    msg = can.Message(arbitration_id=0xc0ffee,
-                      data=[0, 25, 0, 1, 3, 1, 4, 1],
-                      extended_id=False)
+    cabled = cable.CableDaemon()
 
     buffer = can.BufferedReader()
-    csvlog = logger.CSVLogger('log.csv')
+    csv_logger = logger.CSVLogger('log.csv')
+    listeners = [buffer, csv_logger]
     # sqlitelog = logger.SQLiteLogger('log.db')
-
-    # notifier = can.Notifier(bus, [buffer, csvlog, sqlitelog], 15)
-    notifier = can.Notifier(bus, [buffer, csvlog], 15)
+    for l in listeners:
+        cabled.add_listener(l)
 
     while(True):
         msg = buffer.get_message()
         if msg is not None:
             print(msg)
-        if bus.send(msg):
+        if cabled(msglist):
             print("Message NOT sent")
         else:
             print("Message sent")

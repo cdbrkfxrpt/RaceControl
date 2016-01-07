@@ -1,21 +1,34 @@
 import can
 
-class Daemon(object):
-    def __init__(self, interface='vcan0', listeners=None):
+class CableDaemon(object):
+    def __init__(self, interface='vcan0', listeners=[], timeout=30):
         self.bus = can.interface.Bus(interface, bustype='socketcan_native')
 
-        self.listeners = []
-        if listeners is not None:
-            for l in listeners:
-                if isinstance(l, can.Listener):
-                    self.listeners.append(l)
+        self.listeners = listeners
+        for l in listeners:
+            if isinstance(l, can.Listener):
+                self.listeners.append(l)
+
+        self.timeout = timeout
+
+        self.notifier = self.run(self.timeout)
 
     def add_listener(self, listener):
+        self.stop()
         if isinstance(listener, can.Listener):
             self.listeners.append(listener)
+        self.run(self.timeout)
 
     def run(self, timeout=None):
-        can.Notifier(self.bus, self.listeners, timeout)
+        return can.Notifier(self.bus, self.listeners, timeout)
 
-    def __call__(self, msg):
-        pass
+    def stop(self):
+        self.notifier.running.clear()
+
+    def on_call_execute(self, msglist=[]):
+        for msg in msglist:
+            self.bus.send(msg)
+
+    def __call__(self, msglist=[]):
+        if msglist is not None:
+            self.on_call_execute(msglist)
