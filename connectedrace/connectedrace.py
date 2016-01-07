@@ -1,9 +1,10 @@
 import can
 import logger
 import antenna
+import time
 
 def main():
-
+    #
     # pseudocode for main:
     #
     # can_interfaces = ['vcan0'] # TODO: scan system for interfaces, don't hardcode
@@ -19,26 +20,29 @@ def main():
     #
     # massacre(cableslave, antennaslave, loggingslave)
     #
+
     can_interface = 'vcan0'
     bus = can.interface.Bus(can_interface, bustype='socketcan_native')
-    # msg = can.Message(arbitration_id=0xc0ffee,
-    #                   data=[0, 25, 0, 1, 3, 1, 4, 1],
-    #                   extended_id=False)
-    # if bus.send(msg):
-    #     print("Message NOT sent")
-    # else:
-    #     print("Message sent")
+
+    msg = can.Message(arbitration_id=0xc0ffee,
+                      data=[0, 25, 0, 1, 3, 1, 4, 1],
+                      extended_id=False)
 
     buffer = can.BufferedReader()
     csvlog = logger.CSVLogger('log.csv')
-    sqlitelog = logger.SQLiteLogger('log.db')
+    # sqlitelog = logger.SQLiteLogger('log.db')
 
-    notifier = can.Notifier(bus, [buffer, csvlog, sqlitelog], 15)
+    # notifier = can.Notifier(bus, [buffer, csvlog, sqlitelog], 15)
+    notifier = can.Notifier(bus, [buffer, csvlog], 15)
 
-    for msg in iter(buffer.get_message, None):
-        print(msg)
-
-
+    while(True):
+        msg = buffer.get_message()
+        if msg is not None:
+            print(msg)
+        if bus.send(msg):
+            print("Message NOT sent")
+        else:
+            print("Message sent")
 
 if __name__ == "__main__":
     main()
