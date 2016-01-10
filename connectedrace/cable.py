@@ -1,7 +1,7 @@
 import can
 import queue
 
-class CableDaemon(object):
+class CableDaemon:
     def __init__(self, interface='vcan0', listeners=[], timeout=30):
         self.bus = can.interface.Bus(interface, bustype='socketcan_native')
 
@@ -14,26 +14,28 @@ class CableDaemon(object):
 
         self.timeout = timeout
 
-        self.notifier = self.run(self.timeout)
+        self.buffer = can.BufferedReader()
+
+        self.notifier = self.run_notifier(self.timeout)
+
+        self.operate()
 
     def add_listener(self, listener):
-        self.stop()
+        self.stop_notifier()
         if isinstance(listener, can.Listener):
             self.listeners.append(listener)
         else:
             raise TypeError('Only can.Listeners allowed.')
-        self.run(self.timeout)
+        self.run_notifier(self.timeout)
 
-    def run(self, timeout=None):
+    def run_notifier(self, timeout=None):
         return can.Notifier(self.bus, self.listeners, timeout)
 
-    def stop(self):
+    def stop_notifier(self):
         self.notifier.running.clear()
 
-    def on_call_execute(self, msgqueue):
-        while not msgqueue.empty():
-            self.bus.send(msgqueue.get_nowait())
-
-    def __call__(self, msglist=[]):
-        if msglist is not None:
-            self.on_call_execute(msglist)
+    def operate(self):
+        msg = self.buffer.get_message(0)
+        if isinstance(msg, can.Message):
+            print('Sending to CAN: ', msg)
+            self.bus.send(msg)

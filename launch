@@ -2,4 +2,4 @@
 # launches the test environment for ConnectedRace
 
 ./vcan-start
-canplayer -li -g50 -Iplay.can &
+canplayer -li -g1000 -Iplay.can &

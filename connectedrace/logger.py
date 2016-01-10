@@ -1,12 +1,28 @@
 import os
 import can
 import arrow
+import threading
 import sqlite3
 
-class Handler(object):
-    def __init__(self, logfiles):
-        for i in logfiles:
-            pass
+class LoggingDaemon:
+    def __init__(self, root='/home/flrn/ConnectedRaceData/'):
+        if not os.path.exists(root):
+            os.makedirs(root)
+        os.chdir(root)
+        self.csv_logger = CSVLogger('log.csv')
+        self.sqlite_logger = SQLiteLogger('log.db')
+
+    def loggers(self):
+        # return [self.csv_logger]
+        return [self.csv_logger, self.sqlite_logger]
+
+    def on_call_execute(self, msg):
+        self.csv_logger(msg)
+        self.sqlite_logger(msg)
+
+    def __call__(self, msg):
+        if isinstance(msg, can.Message):
+            self.on_call_execute(msg)
 
 class CSVLogger(can.Listener):
     def __init__(self, filename):
@@ -33,6 +49,7 @@ class CSVLogger(can.Listener):
 
 class SQLiteLogger(can.Listener):
     def __init__(self, filename):
+        self.lock = threading.Lock()
         if not os.path.exists(filename):
             open(filename, 'w').close()
         self.conn = sqlite3.connect(filename, check_same_thread=False)
@@ -51,11 +68,14 @@ class SQLiteLogger(can.Listener):
                                           msg.arbitration_id, msg.dlc, data])
         set = [ msg.timestamp, msg.is_remote_frame, msg.id_type,
                 msg.is_error_frame, msg.arbitration_id, msg.dlc, data ]
-        self.cursor.execute('''INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, ?)'''
-                            % self.tablename, set)
-        self.conn.commit()
+        try:
+            self.lock.acquire(True)
+            self.cursor.execute('''INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, ?)'''
+                                % self.tablename, set)
+            self.conn.commit()
+        finally:
+            self.lock.release()
 
     def __del__(self):
         self.conn.commit()
         self.conn.close()
-
