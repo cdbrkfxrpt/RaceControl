@@ -36,7 +36,6 @@ is_error_frame,arbitration_id,dlc,data\n')
         if time.perf_counter() - self.flushstamp > 1.0:
             self.file.flush()
             os.fsync(self.file.fileno())
-            print('CSV/committed logs.')
             self.flushstamp = time.perf_counter()
 
     def __del__(self):
