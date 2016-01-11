@@ -12,7 +12,6 @@ class BucketHandler(socketserver.DatagramRequestHandler):
             for node in self.server.antennad.nodes:
                 if node.ip == self.client_address[0]:
                     node.timestamp = timestamp
-                    print('timestamp updated')
 
             node_msg = node_msg.split(b'#')
             node_msg = list(msg for msg in node_msg

@@ -2,7 +2,7 @@ import threading
 import can
 
 class CableDaemon:
-    def __init__(self, interface='vcan0', listeners=[], timeout=30):
+    def __init__(self, interface='vcan0', listeners=[], timeout=None):
         self.bus = can.interface.Bus(interface, bustype='socketcan_native')
 
         self.listeners = []
