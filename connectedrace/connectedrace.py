@@ -4,6 +4,7 @@ import antenna
 import cable
 import sys
 import signal
+import time
 
 def main():
     cabled = cable.CableDaemon()
@@ -17,9 +18,12 @@ def main():
         cabled.add_listener(listener)
         antennad.add_listener(listener)
 
+    timestamp = time.perf_counter()
     try:
         while True:
-            pass
+            if time.perf_counter() - timestamp > 1.0:
+                print('ConnectedRace running.')
+                timestamp = time.perf_counter()
     except KeyboardInterrupt:
         print('\nExiting ConnectedRace.')
         sys.exit(0)

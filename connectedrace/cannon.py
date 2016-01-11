@@ -2,10 +2,10 @@ import socket, socketserver
 import threading, pickle
 import time
 import can
-from globals import PORT, PROTOCOL
+from globals import D_PORT, PROTOCOL
 
 class Cannon:
-    def __init__(self, antennad, port=PORT, timeout=100):
+    def __init__(self, antennad, port=D_PORT, timeout=100):
         self.buffer = can.BufferedReader()
         self.antennad = antennad
         self.port = port
