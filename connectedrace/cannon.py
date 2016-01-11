@@ -23,9 +23,9 @@ class Cannon:
         self._mechanism.start()
 
     def fire(self):
-        for n in self.antennad.nodes:
+        for node in self.antennad.nodes:
             # print('Firing projectile ', self.projectile)
-            self.sock.sendto(self.projectile, (n, self.port))
+            self.sock.sendto(self.projectile, (node.ip, self.port))
         self.projectile = b''
         self.trigger = time.perf_counter()
 
