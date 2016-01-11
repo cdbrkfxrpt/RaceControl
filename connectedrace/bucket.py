@@ -4,10 +4,9 @@ from globals import D_PORT, PROTOCOL
 
 class BucketHandler(socketserver.DatagramRequestHandler):
     def handle(self):
-        print('self.client_address ', self.client_address)
         node_msg = self.rfile.read().strip()
-        print('self.rfile.read().strip()', node_msg)
         if self.client_address[0] in self.server.antennad.nodes:
+            node_msg = node_msg.split(b'#')
             node_msg = list(msg for msg in node_msg
                                if msg and not msg in PROTOCOL)
             for msg in node_msg:
@@ -23,7 +22,6 @@ class BucketHandler(socketserver.DatagramRequestHandler):
             print('UDP/Node acknowledged: ', self.client_address[0])
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.sendto(PROTOCOL[1], (self.client_address[0], D_PORT))
-            print('Answered ', PROTOCOL[1])
         elif (node_msg == PROTOCOL[1]
             and not self.client_address[0] == self.server.antennad.ip):
             self.server.antennad.add_node(self.client_address[0])

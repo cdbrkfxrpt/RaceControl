@@ -49,7 +49,9 @@ class AntennaDaemon:
 
     def notify(self, msg):
         for listener in self.listeners:
+            print('beginning of notify, listener ', listener)
             listener(msg)
+            print('Listener notified: ', listener)
 
     def add_node(self, node):
         if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", node):
