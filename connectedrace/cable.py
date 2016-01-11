@@ -6,9 +6,9 @@ class CableDaemon:
         self.bus = can.interface.Bus(interface, bustype='socketcan_native')
 
         self.listeners = []
-        for l in listeners:
-            if isinstance(l, can.Listener):
-                self.listeners.append(l)
+        for listener in listeners:
+            if isinstance(listener, can.Listener):
+                self.listeners.append(listener)
             else:
                 raise TypeError('Only can.Listeners allowed.')
 

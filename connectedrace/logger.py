@@ -1,8 +1,6 @@
-import os
+import os, threading, sqlite3
+import arrow, time
 import can
-import arrow
-import threading
-import sqlite3
 
 class LoggingDaemon:
     def __init__(self, root='/home/flrn/ConnectedRaceData/'):
@@ -13,23 +11,16 @@ class LoggingDaemon:
         self.sqlite_logger = SQLiteLogger('log.db')
 
     def loggers(self):
-        # return [self.csv_logger]
         return [self.csv_logger, self.sqlite_logger]
-
-    def on_call_execute(self, msg):
-        self.csv_logger(msg)
-        self.sqlite_logger(msg)
-
-    def __call__(self, msg):
-        if isinstance(msg, can.Message):
-            self.on_call_execute(msg)
 
 class CSVLogger(can.Listener):
     def __init__(self, filename):
-        self.file = open(filename, 'wt')
+        self.flushstamp = time.perf_counter()
+        self.filename = filename
+        self.file = open(self.filename, 'wt')
         self.file.write(
         'timestamp,is_remote_frame,id_type,\
-        is_error_frame,arbitration_id,dlc,data\n')
+is_error_frame,arbitration_id,dlc,data\n')
 
     def on_message_received(self, msg):
         row = ','.join(str(el) for el in [  msg.timestamp,
@@ -42,6 +33,11 @@ class CSVLogger(can.Listener):
                                                 for byte in msg.data)
                                          ])
         self.file.write(row + '\n')
+        if time.perf_counter() - self.flushstamp > 1.0:
+            self.file.flush()
+            os.fsync(self.file.fileno())
+            print('CSV/committed logs.')
+            self.flushstamp = time.perf_counter()
 
     def __del__(self):
         self.file.close()

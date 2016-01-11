@@ -1,16 +1,15 @@
-import socketserver
-import socket
-import sys
-import threading
-import re
-import pickle
-import time
+import socket, socketserver
+import sys, threading, time
+import re, pickle
 import can
-
-PORT = 5252
+from cannon import Cannon
+from bucket import Bucket, BucketHandler
+from bridge import Bridge, BridgeHandler
+from globals import PORT, PROTOCOL
 
 class AntennaDaemon:
     def __init__(self, port=PORT, listeners=[], nodes=[]):
+        self.ip = socket.gethostbyname(socket.getfqdn())
         self.port = port
 
         self.listeners = []
@@ -23,14 +22,22 @@ class AntennaDaemon:
 
         self.cannon = Cannon(self, timeout=2000)
 
-        self.running = threading.Event()
-        self.running.set()
-
         bucket = Bucket(('localhost', port), BucketHandler, self)
-        self._server = threading.Thread(target=bucket.serve_forever)
-        self._server.daemon = True
+        self._bucket_server = threading.Thread(target=bucket.serve_forever)
+        self._bucket_server.daemon = True
+        self._bucket_server.start()
 
-        self._server.start()
+        bridge = Bridge(('localhost', port), BridgeHandler, self)
+        self._bridge_server = threading.Thread(target=bridge.serve_forever)
+        self._bridge_server.daemon = True
+        self._bridge_server.start()
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        sock.sendto(bytes(PROTOCOL[0], 'ascii'), (
+            re.match(r"((\d{1,3}\.{1}){3})\d{1,3}", self.ip).group(1) + '255',
+            self.port
+        ))
 
     def add_listener(self, listener):
         if isinstance(listener, can.Listener):
@@ -39,66 +46,11 @@ class AntennaDaemon:
             raise TypeError('Only can.Listeners allowed.')
 
     def add_node(self, node):
-        if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", n):
-            self.nodes.append(n)
+        if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", node):
+            self.nodes.append(node)
         else:
             raise TypeError('Only IPv4 addresses allowed.')
 
     def notify(self, msg):
         for listener in listeners:
             listener(msg)
-
-class BucketHandler(socketserver.DatagramRequestHandler):
-    def handle(self):
-        if self.client_address in self.server.antennad.nodes:
-            msglist = rfile.read().split(b'#')
-            msglist = list(filter(None, msglist))
-            for msg in msglist:
-                try:
-                    print('Received message ', msg)
-                    self.server.antennad.notify(pickle.loads(msg))
-                except pickle.UnpicklingError:
-                    # self.errlog.write('corrupted data')
-                    print('corrupted data received')
-
-class Bucket(socketserver.UDPServer):
-    def __init__(self, server_address, BucketHandlerClass, antennad):
-        super().__init__(server_address, BucketHandlerClass)
-        self.antennad = antennad
-
-class Cannon:
-    def __init__(self, antennad, port=PORT, timeout=100):
-        self.buffer = can.BufferedReader()
-        self.antennad = antennad
-        self.port = port
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.timeout = timeout
-        self.projectile = b''
-        self.trigger = time.perf_counter()
-
-        self.running = threading.Event()
-        self.running.set()
-
-        self._mechanism = threading.Thread(target=self.operate)
-        self._mechanism.daemon = True
-
-        self._mechanism.start()
-
-    def fire(self):
-        for t in self.antennad.nodes:
-            print('Firing projectile ', self.projectile)
-            self.sock.sendto(self.projectile, (t, self.port))
-        self.projectile = b''
-        self.trigger = time.perf_counter()
-
-    def operate(self):
-        while self.running.is_set():
-            msg = self.buffer.get_message(0)
-            if msg:
-                self.projectile += b'#'
-                self.projectile += pickle.dumps(msg)
-                # print('Pickled message ', msg)
-
-            if ((time.perf_counter() - self.trigger) > (self.timeout / 1000)
-                and self.projectile ):
-                self.fire()
