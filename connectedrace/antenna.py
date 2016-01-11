@@ -40,6 +40,8 @@ class AntennaDaemon:
             self.udpport
         ))
 
+        self.running = threading.Event()
+        self.running.set()
         self._watchdog = threading.Thread(target=self.check_nodes)
         self._watchdog.daemon = True
         self._watchdog.start()
@@ -65,9 +67,11 @@ class AntennaDaemon:
         return ips
 
     def check_nodes(self):
-        for node in self.nodes:
-            if time.perf_counter() - node.timestamp > 5:
-                self.nodes.remove(node)
+        while self.running.is_set():
+            for node in self.nodes:
+                if time.perf_counter() - node.timestamp > 5:
+                    self.nodes.remove(node)
+                    print('Inactive node removed ', node.ip)
 
 class Node:
     def __init__(self, ip, last_msg=None):
