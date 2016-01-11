@@ -23,7 +23,7 @@ class CSVLogger(can.Listener):
 is_error_frame,arbitration_id,dlc,data\n')
 
     def on_message_received(self, msg):
-        print('Received, now logging ', msg)
+        print('Logging ', msg)
         row = ','.join(str(el) for el in [  msg.timestamp,
                                             msg.is_remote_frame,
                                             msg.id_type,

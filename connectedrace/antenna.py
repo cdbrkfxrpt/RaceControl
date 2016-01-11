@@ -8,7 +8,7 @@ from bridge import Bridge, BridgeHandler
 from globals import S_PORT, D_PORT, PROTOCOL
 
 class AntennaDaemon:
-    def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], nodes=[]):
+    def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], node_ips=[]):
         self.ip = socket.gethostbyname(socket.getfqdn())
         self.tcpport = tcpport
         self.udpport = udpport
@@ -18,10 +18,10 @@ class AntennaDaemon:
             add_listener(listener)
 
         self.nodes = []
-        for n in nodes:
-            add_node(n)
+        for ip in node_ips:
+            add_node(ip)
 
-        self.cannon = Cannon(self, timeout=2000)
+        self.cannon = Cannon(self)
 
         bucket = Bucket(('', udpport), BucketHandler, self)
         self._bucket_server = threading.Thread(target=bucket.serve_forever)
@@ -40,6 +40,10 @@ class AntennaDaemon:
             self.udpport
         ))
 
+        self._watchdog = threading.Thread(target=self.check_nodes)
+        self._watchdog.daemon = True
+        self._watchdog.start()
+
     def add_listener(self, listener):
         if isinstance(listener, can.Listener):
             self.listeners.append(listener)
@@ -50,8 +54,27 @@ class AntennaDaemon:
         for listener in self.listeners:
             listener(msg)
 
-    def add_node(self, node):
-        if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", node):
-            self.nodes.append(node)
+    def add_node(self, node_ip, last_msg=None):
+        node = Node(node_ip, last_msg)
+        self.nodes.append(node)
+
+    def node_list(self):
+        ips = []
+        for node in self.nodes:
+            ips.append(node.ip)
+        return ips
+
+    def check_nodes(self):
+        for node in self.nodes:
+            if time.perf_counter() - node.timestamp > 5:
+                self.nodes.remove(node)
+
+class Node:
+    def __init__(self, ip, last_msg=None):
+        if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", ip):
+            self.ip = ip
         else:
             raise TypeError('Only IPv4 addresses allowed.')
+
+        self.last_msg = last_msg
+        self.timestamp = time.perf_counter()
