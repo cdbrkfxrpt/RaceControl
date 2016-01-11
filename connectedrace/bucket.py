@@ -1,11 +1,15 @@
 import socket, socketserver
+import time
 import pickle
 from globals import D_PORT, PROTOCOL
 
 class BucketHandler(socketserver.DatagramRequestHandler):
     def handle(self):
         node_msg = self.rfile.read().strip()
-        if self.client_address[0] in self.server.antennad.node_list():
+        node_list = self.server.antennad.node_list()
+        if self.client_address[0] in node_list:
+            node_list[node_list.index(self.client_address[0])].timestamp =\
+                    time.perf_counter()
             node_msg = node_msg.split(b'#')
             node_msg = list(msg for msg in node_msg
                                if msg and not msg in PROTOCOL)
