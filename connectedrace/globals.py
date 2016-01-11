@@ -1,3 +1,3 @@
 S_PORT = 5251
 D_PORT = 5252
-PROTOCOL = ['REG', 'ACK']
+PROTOCOL = [b'REG', b'ACK']

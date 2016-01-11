@@ -10,6 +10,7 @@ from globals import S_PORT, D_PORT, PROTOCOL
 class AntennaDaemon:
     def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], nodes=[]):
         self.ip = socket.gethostbyname(socket.getfqdn())
+        print('self.ip ', self.ip)
         self.tcpport = tcpport
         self.udpport = udpport
 
@@ -23,7 +24,7 @@ class AntennaDaemon:
 
         self.cannon = Cannon(self, timeout=2000)
 
-        bucket = Bucket(('localhost', udpport), BucketHandler, self)
+        bucket = Bucket(('', udpport), BucketHandler, self)
         self._bucket_server = threading.Thread(target=bucket.serve_forever)
         self._bucket_server.daemon = True
         self._bucket_server.start()
@@ -35,7 +36,7 @@ class AntennaDaemon:
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        sock.sendto(bytes(PROTOCOL[0], 'ascii'), (
+        sock.sendto(PROTOCOL[0] + b'\n', ( # '255.255.255.255', self.udpport))
             re.match(r"((\d{1,3}\.{1}){3})\d{1,3}", self.ip).group(1) + '255',
             self.udpport
         ))
