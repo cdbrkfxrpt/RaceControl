@@ -7,7 +7,6 @@ class BucketHandler(socketserver.DatagramRequestHandler):
         print('life sign from BucketHandler')
         print('self.client_address ', self.client_address)
         if self.client_address[0] in self.server.antennad.nodes:
-            print('node recognized')
             msglist = self.rfile.read().split(b'#')
             msglist = list(msg for msg in msglist
                                if msg and not msg in PROTOCOL)
@@ -22,7 +21,7 @@ class BucketHandler(socketserver.DatagramRequestHandler):
             and not self.client_address[0] == self.server.antennad.ip):
             self.server.antennad.add_node(self.client_address[0])
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            sock.sendto(PROTOCOL[0], (self.client_address[0], D_PORT))
+            sock.sendto(PROTOCOL[1], (self.client_address[0], D_PORT))
             print('UDP/Node acknowledged: ', self.client_address[0])
         elif (self.rfile.readline().strip() == PROTOCOL[1]
             and not self.client_address[0] == self.server.antennad.ip):

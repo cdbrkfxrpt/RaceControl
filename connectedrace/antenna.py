@@ -15,8 +15,8 @@ class AntennaDaemon:
         self.udpport = udpport
 
         self.listeners = []
-        for l in listeners:
-            add_listener(l)
+        for listener in listeners:
+            add_listener(listener)
 
         self.nodes = []
         for n in nodes:
@@ -48,7 +48,7 @@ class AntennaDaemon:
             raise TypeError('Only can.Listeners allowed.')
 
     def notify(self, msg):
-        for listener in listeners:
+        for listener in self.listeners:
             listener(msg)
 
     def add_node(self, node):
