@@ -6,10 +6,14 @@ from globals import D_PORT, PROTOCOL
 class BucketHandler(socketserver.DatagramRequestHandler):
     def handle(self):
         node_msg = self.rfile.read().strip()
-        node_list = self.server.antennad.node_list()
-        if self.client_address[0] in node_list:
-            node_list[node_list.index(self.client_address[0])].timestamp =\
-                    time.perf_counter()
+        ip_list = self.server.antennad.ip_list()
+        if self.client_address[0] in ip_list:
+            timestamp = time.perf_counter()
+            for node in self.server.antennad.nodes:
+                if node.ip == self.client_address[0]:
+                    node.timestamp = timestamp
+                    print('timestamp updated')
+
             node_msg = node_msg.split(b'#')
             node_msg = list(msg for msg in node_msg
                                if msg and not msg in PROTOCOL)
@@ -20,6 +24,7 @@ class BucketHandler(socketserver.DatagramRequestHandler):
                     # syslog.write('corrupted data')
                     print('corrupted data received')
                 # print('Received message ', msg)
+
         elif (node_msg == PROTOCOL[0]
             and not self.client_address[0] == self.server.antennad.ip):
             self.server.antennad.add_node(self.client_address[0], node_msg)

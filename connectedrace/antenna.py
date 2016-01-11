@@ -60,7 +60,7 @@ class AntennaDaemon:
         node = Node(node_ip, last_msg)
         self.nodes.append(node)
 
-    def node_list(self):
+    def ip_list(self):
         ips = []
         for node in self.nodes:
             ips.append(node.ip)

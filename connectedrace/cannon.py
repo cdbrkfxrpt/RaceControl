@@ -22,10 +22,10 @@ class Cannon:
 
         self._mechanism.start()
 
-    def fire(self):
+    def fire(self, bullet):
         for node in self.antennad.nodes:
             # print('Firing projectile ', self.projectile)
-            self.sock.sendto(self.projectile, (node.ip, self.port))
+            self.sock.sendto(bullet, (node.ip, self.port))
         self.projectile = b''
         self.trigger = time.perf_counter()
 
@@ -36,6 +36,8 @@ class Cannon:
                 self.projectile += b'#'
                 self.projectile += pickle.dumps(msg)
 
-            if ((time.perf_counter() - self.trigger) > (self.timeout / 1000)
-                and self.projectile ):
-                self.fire()
+            if ((time.perf_counter() - self.trigger) > (self.timeout / 1000)):
+                if self.projectile:
+                    self.fire(self.projectile)
+                else:
+                    self.fire(PROTOCOL[0])
