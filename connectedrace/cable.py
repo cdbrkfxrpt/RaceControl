@@ -1,5 +1,5 @@
+import threading
 import can
-import queue
 
 class CableDaemon:
     def __init__(self, interface='vcan0', listeners=[], timeout=30):
@@ -18,7 +18,13 @@ class CableDaemon:
 
         self.notifier = self.run_notifier(self.timeout)
 
-        self.operate()
+        self.running = threading.Event()
+        self.running.set()
+
+        self._transmit = threading.Thread(target=self.operate)
+        self._transmit.daemon = True
+
+        self._transmit.start()
 
     def add_listener(self, listener):
         self.stop_notifier()
@@ -35,7 +41,8 @@ class CableDaemon:
         self.notifier.running.clear()
 
     def operate(self):
-        msg = self.buffer.get_message(0)
-        if isinstance(msg, can.Message):
-            print('Sending to CAN: ', msg)
-            self.bus.send(msg)
+        while self.running.is_set():
+            msg = self.buffer.get_message(0)
+            if isinstance(msg, can.Message):
+                print('Sending to CAN: ', msg)
+                self.bus.send(msg)

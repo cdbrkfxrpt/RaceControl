@@ -12,10 +12,10 @@ class BucketHandler(socketserver.DatagramRequestHandler):
             for msg in node_msg:
                 try:
                     self.server.antennad.notify(pickle.loads(msg))
-                except pickle.UnpicklingError:
+                except (pickle.UnpicklingError, EOFError):
                     # syslog.write('corrupted data')
                     print('corrupted data received')
-                print('Received message ', msg)
+                # print('Received message ', msg)
         elif (node_msg == PROTOCOL[0]
             and not self.client_address[0] == self.server.antennad.ip):
             self.server.antennad.add_node(self.client_address[0])

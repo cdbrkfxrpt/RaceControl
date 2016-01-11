@@ -22,7 +22,7 @@ def main():
     try:
         while True:
             if time.perf_counter() - timestamp > 1.0:
-                print('ConnectedRace running.')
+                # print('ConnectedRace running.')
                 timestamp = time.perf_counter()
     except KeyboardInterrupt:
         print('\nExiting ConnectedRace.')

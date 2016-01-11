@@ -35,7 +35,6 @@ class Cannon:
             if msg:
                 self.projectile += b'#'
                 self.projectile += pickle.dumps(msg)
-                # print('Pickled message ', msg)
 
             if ((time.perf_counter() - self.trigger) > (self.timeout / 1000)
                 and self.projectile ):

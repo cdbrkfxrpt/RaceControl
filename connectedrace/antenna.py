@@ -10,7 +10,6 @@ from globals import S_PORT, D_PORT, PROTOCOL
 class AntennaDaemon:
     def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], nodes=[]):
         self.ip = socket.gethostbyname(socket.getfqdn())
-        print('self.ip ', self.ip)
         self.tcpport = tcpport
         self.udpport = udpport
 
@@ -49,9 +48,7 @@ class AntennaDaemon:
 
     def notify(self, msg):
         for listener in self.listeners:
-            print('beginning of notify, listener ', listener)
             listener(msg)
-            print('Listener notified: ', listener)
 
     def add_node(self, node):
         if re.match(r"(\d{1,3}\.{1}){3}\d{1,3}", node):
