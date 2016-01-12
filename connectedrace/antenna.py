@@ -9,8 +9,8 @@ from globals import S_PORT, D_PORT, PROTOCOL
 
 class AntennaDaemon:
     def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], node_ips=[]):
-        self.ip = socket.gethostbyname(socket.getfqdn())
-        # self.ip = '192.168.10.11'
+        # self.ip = socket.gethostbyname(socket.getfqdn())
+        self.ip = '192.168.10.11'
         self.tcpport = tcpport
         self.udpport = udpport
 
@@ -36,10 +36,10 @@ class AntennaDaemon:
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        sock.sendto(PROTOCOL[0] + b'\n', ('255.255.255.255', self.udpport))
-            # re.match(r"((\d{1,3}\.{1}){3})\d{1,3}", self.ip).group(1) + '255',
-            # self.udpport
-        # ))
+        sock.sendto(PROTOCOL[0] + b'\n', ( # '255.255.255.255', self.udpport))
+            re.match(r"((\d{1,3}\.{1}){3})\d{1,3}", self.ip).group(1) + '255',
+            self.udpport
+        ))
 
         self.running = threading.Event()
         self.running.set()
