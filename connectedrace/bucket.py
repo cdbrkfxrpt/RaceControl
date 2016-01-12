@@ -25,13 +25,15 @@ class BucketHandler(socketserver.DatagramRequestHandler):
                 # print('Received message ', msg)
 
         elif (node_msg == PROTOCOL[0]
-            and not self.client_address[0] == self.server.antennad.ip):
+            and not self.client_address[0] == self.server.antennad.ip
+            and not self.client_address[0] == '127.0.0.1'):
             self.server.antennad.add_node(self.client_address[0], node_msg)
             print('UDP/Node acknowledged: ', self.client_address[0])
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.sendto(PROTOCOL[1], (self.client_address[0], D_PORT))
         elif (node_msg == PROTOCOL[1]
-            and not self.client_address[0] == self.server.antennad.ip):
+            and not self.client_address[0] == self.server.antennad.ip_list
+            and not self.client_address[0] == '127.0.0.1'):
             self.server.antennad.add_node(self.client_address[0], node_msg)
             print('UDP/Node registered: ', self.client_address[0])
 
