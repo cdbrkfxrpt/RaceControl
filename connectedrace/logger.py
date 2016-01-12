@@ -3,7 +3,7 @@ import arrow, time
 import can
 
 class LoggingDaemon:
-    def __init__(self, root='/home/flrn/ConnectedRaceData/'):
+    def __init__(self, root=os.path.expanduser('~') + '/ConnectedRaceData/'):
         if not os.path.exists(root):
             os.makedirs(root)
         os.chdir(root)
