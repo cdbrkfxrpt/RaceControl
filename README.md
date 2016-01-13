@@ -1,12 +1,14 @@
 About
 ==
-If you've ever had to operate any vehicle carrying data on the CAN bus, there's a fair chance that you have
-been limited to closed source, limited capability tools with heavy and expensive licensing.
+If you've ever had to operate any vehicle carrying data on the CAN bus, there's
+a fair chance that you have been forced to use closed source, limited
+capability tools. This is my BSc project, maybe it can serve as the basis for
+something else, maybe you're just interested. Enjoy.
 
-Here, have a BSD license alternative.
+todo: licensing
 
 Install
 ==
-Like any python package.
+When it's done: `python setup.py install`
 
-`python setup.py install`
+Right now, it's still a work in progress.
