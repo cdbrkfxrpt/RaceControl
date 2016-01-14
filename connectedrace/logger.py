@@ -1,12 +1,23 @@
 import os, threading, sqlite3
 import arrow, time
 import can
+from globals import LOGDIR, FILEFORMAT
 
 class LoggingDaemon:
-    def __init__(self, root=os.path.expanduser('~') + '/ConnectedRaceData/'):
-        if not os.path.exists(root):
-            os.makedirs(root)
-        os.chdir(root)
+    def __init__(self, root=LOGDIR):
+        if not root:
+            print('Please specify a valid log directory name.')
+            sys.exit(1)
+
+        if os.geteuid() == 0:
+            self.root = '/var/tmp/' + root + '/'
+        else:
+            self.root = os.path.expanduser('~') + '/' + root + '/'
+
+        if not os.path.exists(self.root):
+            os.makedirs(self.root)
+
+        os.chdir(self.root)
         self.csv_logger = CSVLogger('log.csv')
         self.sqlite_logger = SQLiteLogger('log.db')
 

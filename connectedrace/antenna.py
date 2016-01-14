@@ -5,10 +5,10 @@ import can
 from cannon import Cannon
 from bucket import Bucket, BucketHandler
 from bridge import Bridge, BridgeHandler
-from globals import S_PORT, D_PORT, PROTOCOL
+from globals import S_PORT, D_PORT, PROTOCOL, NODES
 
 class AntennaDaemon:
-    def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], node_ips=[]):
+    def __init__(self, tcpport=S_PORT, udpport=D_PORT, listeners=[], node_ips=NODES):
         self.ip = socket.gethostbyname(socket.getfqdn())
         # self.ip = '192.168.10.11'
         self.tcpport = tcpport

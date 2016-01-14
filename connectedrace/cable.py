@@ -1,9 +1,14 @@
-import threading
+import sys, threading
 import can
+from globals import CAN_IFACE
 
 class CableDaemon:
-    def __init__(self, interface='vcan0', listeners=[], timeout=None):
-        self.bus = can.interface.Bus(interface, bustype='socketcan_native')
+    def __init__(self, interface=CAN_IFACE, listeners=[], timeout=None):
+        try:
+            self.bus = can.interface.Bus(interface, bustype='socketcan_native')
+        except OSError:
+            print('No CAN interface defined/interface not found.')
+            sys.exit(1)
 
         self.listeners = []
         for listener in listeners:
