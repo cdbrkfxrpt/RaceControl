@@ -6,6 +6,8 @@ class CableDaemon:
     def __init__(self, interface=CAN_IFACE, listeners=[], timeout=None):
         try:
             self.bus = can.interface.Bus(interface, bustype='socketcan_native')
+            self.interface = interface
+            print('Connected to CAN interface ', self.interface)
         except OSError:
             print('No CAN interface defined/interface not found.')
             sys.exit(1)

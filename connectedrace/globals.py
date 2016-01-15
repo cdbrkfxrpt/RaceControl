@@ -3,7 +3,7 @@
 # SerialCAN uses 'slcan0', 'slcan1' and so on; the Linux Kernel Module for
 # MCP251x over SPI tends to use 'can0', 'can1' and so on. If you have more than
 # one CAN interface you want to log, run several ConnectedRace instances (or
-# contact me at florian.eich@gmail.com, chances are I will help you out.
+# contact me at florian.eich@gmail.com, chances are I will help you out).
 # 'vcan0' is the Linux virtual CAN interface used for testing.
 CAN_IFACE = 'vcan0'
 
@@ -31,12 +31,12 @@ D_PORT = 5252
 #LOGDIR = 'ConnectedRaceData/YYMMDD_PW6.15' # ConnectedRaceData/160114_PW6.15
 #LOGDIR = 'CRD/MMM-YYYY_615' # CRD/Jan-2016_615
 #LOGDIR = 'CRD/DDDD-HH_E-Wemding' # CRD/014-15_E-Wemding
-# A complete list of flags is at the end of this file.
+# Scroll down for complete list of tokens.
 # This can also be done via string composition:
 PREFIX = 'ConnectedRaceData'
-TIMESTAMP = 'YY-MMM-DD'
+TIMESTAMP = 'YYYY-MM-DD'
 SUFFIX = 'PW7.16-Area'
-LOGDIR = PREFIX + '/' + TIMESTAMP + '_' SUFFIX
+LOGDIR = PREFIX + '/' + TIMESTAMP + '_' + SUFFIX
 
 # CSV log file format works like the timestamps and the suffixes for LOGDIR. I
 # recommend adding the CAN which was read. The name of the interface will be
@@ -45,8 +45,34 @@ LOGDIR = PREFIX + '/' + TIMESTAMP + '_' SUFFIX
 # Here, have some examples:
 #FILEFORMAT = 'YYYYMMDDD-PW6.15' # 20160114-PW6.15-$CAN_IFACE-$HOSTNAME.csv
 #FILEFORMAT = 'PW6.15-YYMMDD' # PW6.15-160114-$CAN_IFACE-$HOSTNAME.csv
-FILEFORMAT = 'HH_CAN4-PW6.15'# 15_CAN4-PW6.15-$CAN_IFACE-$HOSTNAME.csv
+FILEFORMAT = 'HH:mm_CAN4-PW6.15'# 15_CAN4-PW6.15-$CAN_IFACE-$HOSTNAME.csv
 
+###############################################################################
+# Tokens
+# Use the following tokens in formatting:
+#
+#                 Token   Output
+# Year            YYYY    2000, 2001, 2002 ... 2012, 2013
+#                 YY      00, 01, 02 ... 12, 13
+# Month           MMMM    January, February, March ...
+#                 MMM     Jan, Feb, Mar ...
+#                 MM      01, 02, 03 ... 11, 12
+#                 M       1, 2, 3 ... 11, 12
+# Day of Year     DDDD    001, 002, 003 ... 364, 365
+#                 DDD     1, 2, 3 ... 4, 5
+# Day of Month    DD      01, 02, 03 ... 30, 31
+#                 D       1, 2, 3 ... 30, 31
+# Day of Week     dddd    Monday, Tuesday, Wednesday ...
+#                 ddd     Mon, Tue, Wed ...
+#                 d       1, 2, 3 ... 6, 7
+# Hour            HH      00, 01, 02 ... 23, 24
+#                 H       0, 1, 2 ... 23, 24
+#                 hh      01, 02, 03 ... 11, 12
+#                 h       1, 2, 3 ... 11, 12
+# Minute          mm      00, 01, 02 ... 58, 59
+#                 m       0, 1, 2 ... 58, 59
+# Seperators      :, -    :, -
+###############################################################################
 
 # PROTOCOL specifies the messages used by the nodes to register with each
 # other. It's in here mainly in case you want to create subnets of nodes.
