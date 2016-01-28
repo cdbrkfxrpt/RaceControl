@@ -10,7 +10,7 @@ config = {
     'download_url': 'git.nrmncr.net/ConnectedRace',
     'author_email': 'flrn@nrmncr.net',
     'version': '0.1',
-    'install_requires': ['nose2','python-can','arrow'],
+    'install_requires': ['pytest','python-can','arrow'],
     'packages': ['connectedrace'],
     'scripts': [],
     'name': 'ConnectedRace'

@@ -1,4 +1,3 @@
-from nose2.tools import *
 import connectedrace
 
 def setup():
