@@ -1,6 +1,6 @@
 import sys, threading
 import can
-from globals import CAN_IFACE
+from connectedrace.globals import CAN_IFACE
 
 class CableDaemon:
     def __init__(self, interface=CAN_IFACE, listeners=[], timeout=None):

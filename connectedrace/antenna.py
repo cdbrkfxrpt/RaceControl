@@ -2,10 +2,10 @@ import socket, socketserver
 import sys, threading, time
 import re, pickle
 import can
-from cannon import Cannon
-from bucket import Bucket, BucketHandler
-from bridge import Bridge, BridgeHandler
-from globals import S_PORT, D_PORT, PROTOCOL, NODES
+from connectedrace.cannon import Cannon
+from connectedrace.bucket import Bucket, BucketHandler
+from connectedrace.bridge import Bridge, BridgeHandler
+from connectedrace.globals import S_PORT, D_PORT, PROTOCOL, NODES
 
 class AntennaDaemon:
     def __init__(self,  tcpport=S_PORT, udpport=D_PORT,
@@ -17,12 +17,12 @@ class AntennaDaemon:
 
         self.listeners = []
         for listener in listeners:
-            add_listener(listener)
+            self.add_listener(listener)
 
         self.nodes = []
         for ip in node_ips:
             self.add_node(ip)
-            print('Starting up with node ', ip)
+            # print('Starting up with node ', ip)
 
         self.cannon = Cannon(self)
 
@@ -74,7 +74,7 @@ class AntennaDaemon:
             for node in self.nodes:
                 if time.perf_counter() - node.timestamp > 5:
                     self.nodes.remove(node)
-                    print('Inactive node removed ', node.ip)
+                    # print('Inactive node removed ', node.ip)
 
 class Node:
     def __init__(self, ip, last_msg=None):
