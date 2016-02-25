@@ -20,8 +20,8 @@ class AntennaDaemon:
             self.add_listener(listener)
 
         self.nodes = []
-        for ip in node_ips:
-            self.add_node(ip)
+        for node_ip in node_ips:
+            self.add_node(node_ip)
             # print('Starting up with node ', ip)
 
         self.cannon = Cannon(self)
