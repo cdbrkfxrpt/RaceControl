@@ -26,12 +26,12 @@ class AntennaDaemon:
 
         self.cannon = Cannon(self)
 
-        bucket = Bucket(('', udpport), BucketHandler, self)
+        bucket = Bucket(('', self.udpport), BucketHandler, self)
         self._bucket_server = threading.Thread(target=bucket.serve_forever)
         self._bucket_server.daemon = True
         self._bucket_server.start()
 
-        bridge = Bridge(('localhost', tcpport), BridgeHandler, self)
+        bridge = Bridge(('localhost', self.tcpport), BridgeHandler, self)
         self._bridge_server = threading.Thread(target=bridge.serve_forever)
         self._bridge_server.daemon = True
         self._bridge_server.start()
