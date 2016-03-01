@@ -3,6 +3,8 @@ from connectedrace.globals import *
 from connectedrace.antenna import *
 from connectedrace.cannon import *
 from connectedrace.bucket import *
+from connectedrace.cable import *
+from connectedrace.logger import *
 
 @pytest.fixture(scope="session")
 def message():
@@ -31,3 +33,15 @@ def bucket_handler():
 @pytest.fixture(scope="session")
 def bucket(antenna):
     return Bucket(('', D_PORT), BucketHandler, antenna)
+
+@pytest.fixture(scope="session")
+def cable():
+    return CableDaemon()
+
+@pytest.fixture(scope="session")
+def logger():
+    return LoggingDaemon()
+
+@pytest.fixture(scope="session")
+def csv_logger():
+    return CSVLogger(FILEFORMAT + '.csv')

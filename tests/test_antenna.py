@@ -1,7 +1,7 @@
 import pytest
 from connectedrace.antenna import *
 
-class TestNode():
+class TestNode:
     def test_node(self, message, node):
         assert node.last_msg == message
         assert node.ip == '127.0.0.1'
