@@ -1,6 +1,6 @@
 import sys, threading
 import can
-from connectedrace.globals import CAN_IFACE
+from globals import CAN_IFACE
 
 class CableDaemon:
     def __init__(self, interface=CAN_IFACE, listeners=[], timeout=None):
@@ -39,7 +39,7 @@ class CableDaemon:
             self.listeners.append(listener)
         else:
             raise TypeError('Only can.Listeners allowed.')
-        self.run_notifier(self.timeout)
+        self.notifier = self.run_notifier(self.timeout)
 
     def run_notifier(self, timeout=None):
         return can.Notifier(self.bus, self.listeners, timeout)
@@ -51,5 +51,5 @@ class CableDaemon:
         while self.running.is_set():
             msg = self.buffer.get_message(0)
             if isinstance(msg, can.Message):
-                print('Sending to CAN ', msg)
+                # print('Sending to CAN ', msg)
                 self.bus.send(msg)

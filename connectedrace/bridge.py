@@ -1,6 +1,6 @@
 import socket, socketserver
 import sys, time, pickle
-from connectedrace.globals import PROTOCOL
+from globals import PROTOCOL
 
 class BridgeHandler(socketserver.StreamRequestHandler):
     def handle(self):

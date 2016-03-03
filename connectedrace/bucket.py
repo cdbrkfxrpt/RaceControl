@@ -1,7 +1,7 @@
 import socket, socketserver
 import time
 import pickle
-from connectedrace.globals import D_PORT, PROTOCOL
+from globals import D_PORT, PROTOCOL
 
 class BucketHandler(socketserver.DatagramRequestHandler):
     def handle(self):

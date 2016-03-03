@@ -2,7 +2,7 @@ import os, threading, re
 import socket, sqlite3
 import arrow, time
 import can
-from connectedrace.globals import CAN_IFACE, LOGDIR, FILEFORMAT
+from globals import CAN_IFACE, LOGDIR, FILEFORMAT
 
 class LoggingDaemon:
     def __init__(self, logdir=LOGDIR, fileformat=FILEFORMAT):

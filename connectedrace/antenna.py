@@ -2,10 +2,10 @@ import socket, socketserver
 import sys, threading, time
 import re, pickle
 import can
-from connectedrace.cannon import Cannon
-from connectedrace.bucket import Bucket, BucketHandler
-from connectedrace.bridge import Bridge, BridgeHandler
-from connectedrace.globals import S_PORT, D_PORT, PROTOCOL, NODES
+from cannon import Cannon
+from bucket import Bucket, BucketHandler
+from bridge import Bridge, BridgeHandler
+from globals import S_PORT, D_PORT, PROTOCOL, NODES
 
 class AntennaDaemon:
     def __init__(self,  tcpport=S_PORT, udpport=D_PORT,

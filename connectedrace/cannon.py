@@ -2,7 +2,7 @@ import socket, socketserver
 import threading, pickle
 import time
 import can
-from connectedrace.globals import D_PORT, PROTOCOL
+from globals import D_PORT, PROTOCOL
 
 class Cannon:
     def __init__(self, antennad, port=D_PORT, timeout=100):

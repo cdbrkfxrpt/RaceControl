@@ -3,10 +3,13 @@ from connectedrace.cable import *
 
 class TestCable:
     def test_init(self, cable):
-        pass
+        assert not cable.listeners
 
     def test_add_listener(self, cable, listener):
-        pass
+        cable.add_listener(listener)
+        assert listener in cable.listeners
+        cable.listeners = []
+        assert not cable.listeners
 
     def test_run_notifier(self, cable):
         pass
