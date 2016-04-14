@@ -1,6 +1,8 @@
-import sys, threading
+import sys
+import threading
 import can
 from globals import CAN_IFACE
+
 
 class CableDaemon:
     def __init__(self, interface=CAN_IFACE, listeners=[], timeout=None):
@@ -51,5 +53,5 @@ class CableDaemon:
         while self.running.is_set():
             msg = self.buffer.get_message(0)
             if isinstance(msg, can.Message):
-                print('Sending to CAN ', msg)
+                # print('Sending to CAN ', msg)
                 self.bus.send(msg)

@@ -1,8 +1,11 @@
-import socket, socketserver
-import threading, pickle
+import socket
+# import socketserver
+import threading
+import pickle
 import time
 import can
 from globals import D_PORT, PROTOCOL
+
 
 class Cannon:
     def __init__(self, antennad, port=D_PORT, timeout=100):

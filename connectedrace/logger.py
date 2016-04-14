@@ -1,8 +1,14 @@
-import os, threading, re
-import socket, sqlite3
-import arrow, time
+import os
+import sys
+import threading
+import re
+import socket
+import sqlite3
+import arrow
+import time
 import can
 from globals import CAN_IFACE, LOGDIR, FILEFORMAT
+
 
 class LoggingDaemon:
     def __init__(self, logdir=LOGDIR, fileformat=FILEFORMAT):
@@ -39,13 +45,15 @@ class LoggingDaemon:
         self.fileformat = fileformat
 
         self.csv_logger = CSVLogger(self.fileformat + '.csv')
-        self.sqlite_logger = SQLiteLogger(
-                self.fileformat.split('_')[1] + '.sqlite',
-                re.sub(r':', 'h', 'OUT_' + self.fileformat.split('_')[0])
-        )
+        # self.sqlite_logger = SQLiteLogger(
+        #         self.fileformat.split('_')[1] + '.sqlite',
+        #         re.sub(r':', 'h', 'OUT_' + self.fileformat.split('_')[0])
+        # )
 
     def loggers(self):
-        return [self.csv_logger, self.sqlite_logger]
+        # return [self.csv_logger, self.sqlite_logger]
+        return [self.csv_logger]
+
 
 class CSVLogger(can.Listener):
     def __init__(self, filename):
@@ -57,15 +65,14 @@ class CSVLogger(can.Listener):
 is_error_frame,arbitration_id,dlc,data\n')
 
     def on_message_received(self, msg):
-        row = ','.join(str(el) for el in [  msg.timestamp,
-                                            msg.is_remote_frame,
-                                            msg.id_type,
-                                            msg.is_error_frame,
-                                            msg.arbitration_id,
-                                            msg.dlc,
-                                            ''.join('%.2x' % byte
-                                                for byte in msg.data)
-                                         ])
+        row = ','.join(str(el) for el in [msg.timestamp,
+                                          msg.is_remote_frame,
+                                          msg.id_type,
+                                          msg.is_error_frame,
+                                          msg.arbitration_id,
+                                          msg.dlc,
+                                          ''.join('%.2x' % byte
+                                                  for byte in msg.data)])
         self.file.write(row + '\n')
         if time.perf_counter() - self.flushstamp > 1.0:
             self.file.flush()
@@ -76,36 +83,36 @@ is_error_frame,arbitration_id,dlc,data\n')
         self.file.close()
 
 
-class SQLiteLogger(can.Listener):
-    def __init__(self, filename, tablename):
-        self.lock = threading.Lock()
-        if not os.path.exists(filename):
-            open(filename, 'w').close()
-        self.conn = sqlite3.connect(filename, check_same_thread=False)
-        self.cursor = self.conn.cursor()
-        self.tablename = tablename
-        header = '(timestamp, is_remote_frame, id_type, is_error_frame,\
-                   arbitration_id, dlc, data)'
-        self.cursor.execute(
-            '''CREATE TABLE IF NOT EXISTS %s %s''' % (self.tablename, header)
-        )
-        self.conn.commit()
+# class SQLiteLogger(can.Listener):
+#     def __init__(self, filename, tablename):
+#         self.lock = threading.Lock()
+#         if not os.path.exists(filename):
+#             open(filename, 'w').close()
+#         self.conn = sqlite3.connect(filename, check_same_thread=False)
+#         self.cursor = self.conn.cursor()
+#         self.tablename = tablename
+#         header = '(timestamp, is_remote_frame, id_type, is_error_frame,\
+#                    arbitration_id, dlc, data)'
+#         self.cursor.execute(
+#             '''CREATE TABLE IF NOT EXISTS %s %s''' % (self.tablename, header)
+#         )
+#         self.conn.commit()
 
-    def on_message_received(self, msg):
-        data = ''.join('%.2x' % byte for byte in msg.data)
-        row = ','.join(str(el) for el in [msg.timestamp, msg.is_remote_frame,
-                                          msg.is_error_frame,
-                                          msg.arbitration_id, msg.dlc, data])
-        set = [ msg.timestamp, msg.is_remote_frame, msg.id_type,
-                msg.is_error_frame, msg.arbitration_id, msg.dlc, data ]
-        try:
-            self.lock.acquire(True)
-            self.cursor.execute('''INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, ?)'''
-                                % self.tablename, set)
-            self.conn.commit()
-        finally:
-            self.lock.release()
+#     def on_message_received(self, msg):
+#         data = ''.join('%.2x' % byte for byte in msg.data)
+#         row = ','.join(str(el) for el in [msg.timestamp, msg.is_remote_frame,
+#                                           msg.is_error_frame,
+#                                           msg.arbitration_id, msg.dlc, data])
+#         set = [ msg.timestamp, msg.is_remote_frame, msg.id_type,
+#                 msg.is_error_frame, msg.arbitration_id, msg.dlc, data ]
+#         try:
+#             self.lock.acquire(True)
+#             self.cursor.execute('''INSERT INTO %s VALUES (?, ?, ?, ?, ?, ?, ?)'''
+#                                 % self.tablename, set)
+#             self.conn.commit()
+#         finally:
+#             self.lock.release()
 
-    def __del__(self):
-        self.conn.commit()
-        self.conn.close()
+#     def __del__(self):
+#         self.conn.commit()
+#         self.conn.close()

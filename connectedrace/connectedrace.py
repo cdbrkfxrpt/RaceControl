@@ -1,10 +1,9 @@
-import can
 import logger
 import antenna
 import cable
 import sys
-import signal
 import time
+
 
 def main():
     cabled = cable.CableDaemon()
