@@ -23,18 +23,18 @@ class AntennaDaemon:
             self.add_listener(listener)
 
         self.nodes = []
-        for ip in node_ips:
-            self.add_node(ip)
-            print('Starting up with node ', ip)
+        for node_ip in node_ips:
+            self.add_node(node_ip)
+            # print('Starting up with node ', ip)
 
         self.cannon = Cannon(self)
 
-        bucket = Bucket(('', udpport), BucketHandler, self)
+        bucket = Bucket(('', self.udpport), BucketHandler, self)
         self._bucket_server = threading.Thread(target=bucket.serve_forever)
         self._bucket_server.daemon = True
         self._bucket_server.start()
 
-        bridge = Bridge(('localhost', tcpport), BridgeHandler, self)
+        bridge = Bridge(('localhost', self.tcpport), BridgeHandler, self)
         self._bridge_server = threading.Thread(target=bridge.serve_forever)
         self._bridge_server.daemon = True
         self._bridge_server.start()
@@ -77,7 +77,7 @@ class AntennaDaemon:
             for node in self.nodes:
                 if time.perf_counter() - node.timestamp > 5:
                     self.nodes.remove(node)
-                    print('Inactive node removed ', node.ip)
+                    # print('Inactive node removed ', node.ip)
 
 
 class Node:

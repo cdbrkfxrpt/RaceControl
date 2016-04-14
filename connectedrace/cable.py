@@ -41,7 +41,7 @@ class CableDaemon:
             self.listeners.append(listener)
         else:
             raise TypeError('Only can.Listeners allowed.')
-        self.run_notifier(self.timeout)
+        self.notifier = self.run_notifier(self.timeout)
 
     def run_notifier(self, timeout=None):
         return can.Notifier(self.bus, self.listeners, timeout)
