@@ -4,3 +4,4 @@ log.*
 .*.sw*
 .cache
 .coverage
+*.egg-info
