@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Management interface and data GUI for ConnectedRace">
+    <meta name="author" content="Florian Eich">
+    <!-- <link rel="icon" href="./templates/img/icon.jpg"> -->
+
+    <title>RaceControl</title>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="{{ url_for('static', filename='css/cover.css') }}" rel="stylesheet">
+
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div class="site-wrapper">
+      <div class="site-wrapper-inner">
+        <div class="cover-container">
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">RaceControl</h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="/">Data</a></li>
+                  <li><a href="/loggings">Loggings</a></li>
+                  <li><a href="/contact">Contact</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="inner cover">
+            {% block content %}{% endblock %}
+          </div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p id="footer">RaceControl by <a href="https://github.com/floGik">Florian Eich</a> using</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+#!/bin/sh
+# -*- coding: utf-8 -*-
+
+BUSSPEED=$1
+BUSID=$2
+TTY=$(dmesg | egrep -o 'ttyACM[0-9]+')
+
+if [ -z $BUSSPEED ]; then
+  echo "Please give the bus speed as an integer."
+  echo "(10kBit/s = 0, 20kBit/s = 1, 50kBit/s = 2,"
+  echo "100kBit/s = 3, 125kBit/s = 4, 250kBit/s = 5,"
+  echo "500kBit/s = 6, 800kBit/s = 7, 1000kBit/s = 8)"
+  exit
+fi
+
+if [ -z $BUSID ]; then
+  echo "Please give the bus ID to create, e.g. slcan0."
+fi
+
+if [ -z $TTY ]; then
+  echo "Please connect USBtin to device."
+fi
+
+sudo slcan_attach -f -s$BUSSPEED -n $BUSID -o /dev/$TTY
+sudo slcand $TTY $BUSID
+
+sudo ifconfig $BUSID up
+
+echo "Script ran successfully."

@@ -1,0 +1,43 @@
+{% extends "baselay.html" %}
+
+{% block head %}
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jquery.flot.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/raceflot.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<!-- <h1 class="cover-heading">Welcome.</h1> -->
+
+<div id="upperplot" style="height: 300px; margin: 0 auto">
+</div>
+
+<div id="lowerplot" style="height: 300px; margin: 0 auto">
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div id="leftupper" class="col-lg-6">
+      <script type="text/javascript">
+        var eventOutputContainer = document.getElementById("leftupper");
+        var evtSrc = new EventSource("/subscribe");
+
+        evtSrc.onmessage = function(e) {
+          console.log(e.data);
+          eventOutputContainer.innerHTML = e.data;
+        };
+      </script>
+    </div>
+    <div id="rightupper" class="col-lg-6">
+      container rightupper
+    </div>
+    <div id="leftlower" class="col-lg-6">
+      container leftlower
+    </div>
+    <div id="rightlower" class="col-lg-6">
+      container rightlower
+    </div>
+  </div>
+</div>
+
+{% endblock %}

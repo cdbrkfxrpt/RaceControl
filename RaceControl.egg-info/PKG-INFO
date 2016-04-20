@@ -1,0 +1,11 @@
+Metadata-Version: 1.1
+Name: RaceControl
+Version: 0.1
+Summary: RaceControl is a bidirectional CAN telemetry platform for vehicles.
+Home-page: git.nrmncr.net/RaceControl
+Author: Florian Eich
+Author-email: flrn@nrmncr.net
+License: UNKNOWN
+Download-URL: git.nrmncr.net/RaceControl
+Description: UNKNOWN
+Platform: UNKNOWN

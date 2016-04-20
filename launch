@@ -1,5 +1,0 @@
-#!/bin/sh
-# launches the test environment for ConnectedRace
-
-./vcan-start
-canplayer -li -g50 -Iplay.can &

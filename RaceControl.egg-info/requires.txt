@@ -1,0 +1,6 @@
+pytest
+python-can
+flask
+gevent
+canmatrix
+arrow

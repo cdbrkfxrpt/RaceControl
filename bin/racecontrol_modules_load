@@ -1,0 +1,10 @@
+#!/bin/sh
+# -*- coding: utf-8 -*-
+
+if [ $(id -u) = "0" ]; then
+  modprobe can can-raw slcan vcan
+else
+  sudo modprobe can can-raw slcan vcan
+fi
+
+echo "If you were root or had sudo rights, the modules have been loaded."

@@ -1,16 +1,31 @@
+# RaceControl, a bidirectional CAN bus telemetry platform.
+# Copyright (C) 2016 Florian Eich
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 import os
 import sys
-import threading
 import re
 import socket
-import sqlite3
 import arrow
 import time
 import can
-from globals import CAN_IFACE, LOGDIR, FILEFORMAT
+
+from racecontrol.globals import CAN_IFACE, LOGDIR, FILEFORMAT
 
 
-class LoggingDaemon:
+class LogCom:
     def __init__(self, logdir=LOGDIR, fileformat=FILEFORMAT):
         if not logdir:
             print('Please specify a valid log directory name.')
@@ -30,7 +45,7 @@ class LoggingDaemon:
         fileformat = timepat.sub(fileformat_stamp + '_', fileformat)
 
         if os.geteuid() == 0:
-            self.logdir = '/var/tmp/' + logdir + '/'
+            self.logdir = '/var/www/loggings/' + logdir + '/'
         else:
             self.logdir = os.path.expanduser('~') + '/' + logdir + '/'
 
