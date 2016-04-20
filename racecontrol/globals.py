@@ -5,12 +5,13 @@
 # one CAN interface you want to log, run several ConnectedRace instances (or
 # contact me at florian.eich@gmail.com, chances are I will help you out).
 # 'vcan0' is the Linux virtual CAN interface used for testing.
+DEVICE = 'PWe6.15'
 CAN_IFACE = 'vcan0'
 
 # NODES specifies the IP addresses of your other nodes. Leave empty ([]) if
 # you're using some kind of DHCP. I would recommend a static IP setup, in which
 # case leaving it empty still works but specifying will be more stable.
-NODES = ['192.168.10.1']
+NODES = ['192.168.11.61']
 
 # S_PORT and D_PORT are the ports used for the TCP and the UDP connection. If
 # you don't know what to put in here, simple leave it alone. DO NOT use the
@@ -36,7 +37,8 @@ D_PORT = 5252
 PREFIX = 'ConnectedRaceData'
 TIMESTAMP = 'YYYY-MM-DD'
 SUFFIX = 'Werkstatt-Test'
-LOGDIR = PREFIX + '/' + TIMESTAMP + '_' + SUFFIX
+# LOGDIR = PREFIX + '/' + TIMESTAMP + '_' + SUFFIX
+LOGDIR = TIMESTAMP + '_' + SUFFIX
 
 # CSV log file format works like the timestamps and the suffixes for LOGDIR. I
 # recommend adding the CAN which was read. The name of the interface will be
@@ -45,7 +47,8 @@ LOGDIR = PREFIX + '/' + TIMESTAMP + '_' + SUFFIX
 # Here, have some examples:
 #FILEFORMAT = 'YYYYMMDDD-PW6.15' # 20160114-PW6.15-$CAN_IFACE-$HOSTNAME.csv
 #FILEFORMAT = 'PW6.15-YYMMDD' # PW6.15-160114-$CAN_IFACE-$HOSTNAME.csv
-FILEFORMAT = 'HH-mm_CAN4_PW6-15'# 15_CAN4-PW6.15-$CAN_IFACE-$HOSTNAME.csv
+HOURSTAMP = 'HH-mm'
+FILEFORMAT = HOURSTAMP + '_' + DEVICE + '_' + CAN_IFACE
 
 ###############################################################################
 # Tokens

@@ -71,5 +71,5 @@ class CANCom:
             msg = self.buffer.get_message(0)
             if (isinstance(msg, can.Message) and
                msg.arbitration_id not in self.blacklist):
-                # print('Sending to CAN ', msg)
+                print('Sending to CAN ', msg)
                 self.bus.send(msg)

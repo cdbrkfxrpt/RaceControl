@@ -26,9 +26,9 @@ from racecontrol.globals import D_PORT, PROTOCOL, NODES
 
 
 class NetCom:
-    def __init__(self, udpport=D_PORT, listeners=[], node_ips=NODES):
-        # self.ip = socket.gethostbyname(socket.getfqdn())
-        self.ip = '192.168.11.1'
+    def __init__(self, prioritylist, ip='192.168.11.26', udpport=D_PORT,
+                 listeners=[], node_ips=NODES):
+        self.ip = ip
         self.udpport = udpport
 
         self.listeners = []
@@ -38,9 +38,9 @@ class NetCom:
         self.nodes = []
         for node_ip in node_ips:
             self.add_node(node_ip)
-            # print('Starting up with node ', ip)
+            print('Starting up with node ', node_ip)
 
-        self.dispatcher = Dispatcher(self)
+        self.dispatcher = Dispatcher(self, prioritylist)
 
         netcomserver = NetComServer(('', self.udpport),
                                     NetComRequestHandler, self)
@@ -52,7 +52,7 @@ class NetCom:
 
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        sock.sendto(PROTOCOL[0] + b'\n', (  # '255.255.255.255', self.udpport))
+        sock.sendto(PROTOCOL[0] + b'\n', (
             re.match(r"((\d{1,3}\.{1}){3})\d{1,3}", self.ip).group(1) + '255',
             self.udpport
         ))
@@ -88,7 +88,7 @@ class NetCom:
             for node in self.nodes:
                 if time.perf_counter() - node.timestamp > 5:
                     self.nodes.remove(node)
-                    # print('Inactive node removed ', node.ip)
+                    print('Inactive node removed ', node.ip)
 
 
 class Node:
@@ -103,13 +103,16 @@ class Node:
 
 
 class Dispatcher:
-    def __init__(self, netcom, port=D_PORT, timeout=100):
+    def __init__(self, netcom, prioritylist, port=D_PORT, timeout=100):
         self.buffer = can.BufferedReader()
+
+        self.prioritylist = prioritylist
+        self.priority_set = False
+
         self.netcom = netcom
         self.port = port
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.timeout = timeout
-        self.payload = b''
         self.trigger = time.perf_counter()
 
         self.running = threading.Event()
@@ -120,25 +123,27 @@ class Dispatcher:
 
         self._mechanism.start()
 
+    def priorityfilter(self, msg):
+        if self.priority_set and msg.arbitration_id not in self.prioritylist:
+            return None
+        else:
+            return msg
+
     def dispatch(self, payload):
         for node in self.netcom.nodes:
-            # print('Firing payload ', self.payload)
+            # print('Firing payload ', payload)
             self.sock.sendto(payload, (node.ip, self.port))
-        self.payload = b''
         self.trigger = time.perf_counter()
 
     def operate(self):
         while self.running.is_set():
-            msg = self.buffer.get_message(0)
+            msg = self.buffer.get_message()
+            msg = self.priorityfilter(msg)
             if msg:
-                self.payload += b'#'
-                self.payload += pickle.dumps(msg)
+                self.dispatch(pickle.dumps(msg))
 
             if ((time.perf_counter() - self.trigger) > (self.timeout / 1000)):
-                if self.payload:
-                    self.dispatch(self.payload)
-                else:
-                    self.dispatch(PROTOCOL[0])
+                self.dispatch(PROTOCOL[0] + b'\n')
 
 
 class NetComRequestHandler(socketserver.DatagramRequestHandler):
@@ -161,20 +166,20 @@ class NetComRequestHandler(socketserver.DatagramRequestHandler):
                     pass
                     # syslog.write('corrupted data')
                     # print('corrupted data received')
-                # print('Received message ', msg)
+                print('Received message ', msg)
 
         elif (node_msg == PROTOCOL[0] and not
               self.client_address[0] == self.server.netcom.ip and not
               self.client_address[0] == '127.0.0.1'):
             self.server.netcom.add_node(self.client_address[0], node_msg)
-            # print('UDP/Node acknowledged: ', self.client_address[0])
+            print('UDP/Node acknowledged: ', self.client_address[0])
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.sendto(PROTOCOL[1], (self.client_address[0], D_PORT))
         elif (node_msg == PROTOCOL[1] and not
               self.client_address[0] == self.server.netcom.ip_list and not
               self.client_address[0] == '127.0.0.1'):
             self.server.netcom.add_node(self.client_address[0], node_msg)
-            # print('UDP/Node registered: ', self.client_address[0])
+            print('UDP/Node registered: ', self.client_address[0])
 
 
 class NetComServer(socketserver.UDPServer):

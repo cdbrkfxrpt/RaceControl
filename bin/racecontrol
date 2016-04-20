@@ -39,67 +39,73 @@ def main():
         """
     )
 
-    # configpath = os.path.expanduser('~/.config/racecontrol')
     configpath = '/home/flrn/.config/racecontrol'
     if not os.path.exists(configpath):
         print('No config path found.')
         sys.exit(0)
 
     blacklistdbc = im.importany(configpath + '/dbc/blacklist.dbc')
-    # prioritydbc = im.importany(configpath + '/dbc/priority.dbc')
+    prioritydbc = im.importany(configpath + '/dbc/priority.dbc')
     guiupperdbc = im.importany(configpath + '/dbc/guiupper.dbc')
     guilowerdbc = im.importany(configpath + '/dbc/guilower.dbc')
     guitextdbc = im.importany(configpath + '/dbc/guitext.dbc')
 
     blacklist = [frame._Id for frame in blacklistdbc._fl._list]
+    priority = [frame._Id for frame in prioritydbc._fl._list]
+
+    msgfilter = {}
+
+    upperid = guiupperdbc._fl._list[0]._Id
+    lowerid = guilowerdbc._fl._list[0]._Id
+    textid = guitextdbc._fl._list[0]._Id
+
+    msgfilter[upperid] = {}
+    msgfilter[lowerid] = {}
+    msgfilter[textid] = {}
+
+    offset = 0
 
     uppersignals = guiupperdbc._fl._list[0]._signals
-    guiupper = [guiupperdbc._fl._list[0]._Id]
     for sig in uppersignals:
-        guiupper.append(int(sig._startbit / 8))
-        guiupper.append(int(sig._signalsize / 8))
-    print(guiupper)
+        msgfilter[upperid][offset] = {}
+        msgfilter[upperid][offset]['start'] = int(sig._startbit / 8)
+        msgfilter[upperid][offset]['size'] = int(sig._signalsize / 8)
+        msgfilter[upperid][offset]['name'] = sig._name
+        offset += 1
 
     lowersignals = guilowerdbc._fl._list[0]._signals
-    guilower = [guilowerdbc._fl._list[0]._Id]
     for sig in lowersignals:
-        guilower.append(int(sig._startbit / 8))
-        guilower.append(int(sig._signalsize / 8))
-    print(guilower)
+        msgfilter[lowerid][offset] = {}
+        msgfilter[lowerid][offset]['start'] = int(sig._startbit / 8)
+        msgfilter[lowerid][offset]['size'] = int(sig._signalsize / 8)
+        msgfilter[lowerid][offset]['name'] = sig._name
+        offset += 1
 
     textsignals = guitextdbc._fl._list[0]._signals
-    guitext = [guitextdbc._fl._list[0]._Id]
     for sig in textsignals:
-        guitext.append(int(sig._startbit / 8))
-        guitext.append(int(sig._signalsize / 8))
-    print(guitext)
+        msgfilter[textid][offset] = {}
+        msgfilter[textid][offset]['start'] = int(sig._startbit / 8)
+        msgfilter[textid][offset]['size'] = int(sig._signalsize / 8)
+        msgfilter[textid][offset]['name'] = sig._name
+        offset += 1
 
     cancomd = cancom.CANCom(blacklist)
-    netcomd = netcom.NetCom()
+    netcomd = netcom.NetCom(priority)
     logcomd = logcom.LogCom()
-    webcomupper = webcom.GUIGenerator(webcom.upperqueue, guiupper)
-    webcomlower = webcom.GUIGenerator(webcom.lowerqueue, guilower)
-    webcomtext = webcom.GUIGenerator(webcom.textqueue, guitext)
+    webcomd = webcom.GUICom(webcom.msgqueue, msgfilter)
 
     cancomd.add_listener(netcomd.dispatcher.buffer)
-    cancomd.add_listener(webcomupper.buffer)
-    cancomd.add_listener(webcomlower.buffer)
-    cancomd.add_listener(webcomtext.buffer)
+    cancomd.add_listener(webcomd.buffer)
     netcomd.add_listener(cancomd.buffer)
 
     for listener in logcomd.loggers():
         cancomd.add_listener(listener)
         netcomd.add_listener(listener)
 
-    # timestamp = time.perf_counter()
     try:
         webcom.app.debug = True
         server = wsgi.WSGIServer(("", 5000), webcom.app)
         server.serve_forever()
-        # while True:
-        #     if time.perf_counter() - timestamp > 1.0:
-        #         # print('ConnectedRace running.')
-        #         timestamp = time.perf_counter()
     except KeyboardInterrupt:
         print('\nExiting RaceControl.')
         sys.exit(0)
