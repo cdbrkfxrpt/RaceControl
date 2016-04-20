@@ -5,3 +5,4 @@ log.*
 .cache
 .coverage
 *.egg-info
+*.egg-info/*
