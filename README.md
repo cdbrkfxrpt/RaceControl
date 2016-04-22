@@ -81,59 +81,57 @@ directly).
 
 `nginx` must be configured thusly:
 
-`
-  worker_processes  4;
+    worker_processes  4;
 
-  events {
-      worker_connections  1024;
-  }
+    events {
+        worker_connections  1024;
+    }
 
-  http {
-      include       mime.types;
-      default_type  application/octet-stream;
-      sendfile        on;
-      keepalive_timeout  65;
+    http {
+        include       mime.types;
+        default_type  application/octet-stream;
+        sendfile        on;
+        keepalive_timeout  65;
 
-      server {
-          listen       80;
-          server_name  hideo.racecontrol;
-          root /home/flrn/workbench/RaceWeb;
+        server {
+            listen       80;
+            server_name  hideo.racecontrol;
+            root /home/flrn/workbench/RaceWeb;
 
-          charset utf-8;
-          client_max_body_size 100M;
+            charset utf-8;
+            client_max_body_size 100M;
 
-          access_log  /var/log/nginx/access.log;
-          error_log /var/log/nginx/error.log;
+            access_log  /var/log/nginx/access.log;
+            error_log /var/log/nginx/error.log;
 
-          location ^~ /loggings {
-            alias /var/www/loggings/;
-            autoindex on;
-          }
+            location ^~ /loggings {
+              alias /var/www/loggings/;
+              autoindex on;
+            }
 
-          location / {
-              proxy_pass      http://127.0.0.1:5000/;
-              proxy_redirect  off;
+            location / {
+                proxy_pass      http://127.0.0.1:5000/;
+                proxy_redirect  off;
 
-              proxy_set_header Host           $host;
-              proxy_set_header X-Real-IP      $remote_addr;
-              proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+                proxy_set_header Host           $host;
+                proxy_set_header X-Real-IP      $remote_addr;
+                proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
 
-              proxy_set_header Connection '';
-              proxy_http_version 1.1;
-              chunked_transfer_encoding off;
+                proxy_set_header Connection '';
+                proxy_http_version 1.1;
+                chunked_transfer_encoding off;
 
-              proxy_buffering off;
-              proxy_cache off;
-          }
+                proxy_buffering off;
+                proxy_cache off;
+            }
 
-          # redirect server error pages to the static page /50x.html
-          error_page   500 502 503 504  /50x.html;
-          location = /50x.html {
-              root   /usr/share/nginx/html;
-          }
-      }
-  }
-`
+            # redirect server error pages to the static page /50x.html
+            error_page   500 502 503 504  /50x.html;
+            location = /50x.html {
+                root   /usr/share/nginx/html;
+            }
+        }
+    }
 
 This is the complete `nginx` configuration, ready to be copied and pasted to
 your device's `/etc/nginx/nginx.conf`.
