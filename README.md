@@ -80,8 +80,8 @@ if you're not using `rpi-source` but are compiling from kernel code downloaded
 directly).
 
 `nginx` must be configured thusly:
-`
-worker_processes  4;
+
+`worker_processes  4;
 
 events {
     worker_connections  1024;
@@ -131,7 +131,7 @@ http {
             root   /usr/share/nginx/html;
         }
     }
-}
-`
+}`
+
 This is the complete `nginx` configuration, ready to be copied and pasted to
 your device's `/etc/nginx/nginx.conf`.
