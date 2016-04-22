@@ -90,20 +90,6 @@
 \setcounter{secnumdepth}{5}
 \makeindex
 
-% Hyperlinks (required, but should be loaded last)
-\usepackage{ifpdf}
-\ifpdf
-  \usepackage[pdftex,pagebackref=true]{hyperref}
-\else
-  \usepackage[ps2pdf,pagebackref=true]{hyperref}
-\fi
-\hypersetup{%
-  colorlinks=true,%
-  linkcolor=blue,%
-  citecolor=blue,%
-  unicode%
-}
-
 % Custom commands
 \newcommand{\clearemptydoublepage}{%
   \newpage{\pagestyle{empty}\cleardoublepage}%
@@ -117,10 +103,6 @@
 \begin{document}
 
 % Titlepage & ToC
-\hypersetup{pageanchor=false,
-             bookmarksnumbered=true,
-             pdfencoding=unicode
-            }
 \pagenumbering{roman}
 \begin{titlepage}
 \vspace*{7cm}
@@ -134,12 +116,10 @@
 \tableofcontents
 \clearemptydoublepage
 \pagenumbering{arabic}
-\hypersetup{pageanchor=true}
 
 %--- Begin generated contents ---
 \chapter{About}
 \label{md_README}
-\hypertarget{md_README}{}
 \input{md_README}
 \chapter{Hierarchical Index}
 \input{hierarchy}
@@ -155,6 +135,7 @@
 \input{classracecontrol_1_1netcom_1_1NetComRequestHandler}
 \input{classracecontrol_1_1netcom_1_1NetComServer}
 \input{classracecontrol_1_1netcom_1_1Node}
+\input{classracecontrol_1_1webcom_1_1WebCom}
 %--- End generated contents ---
 
 % Index
