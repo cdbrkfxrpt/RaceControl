@@ -29,6 +29,14 @@ import racecontrol.webcom as webcom
 
 
 def main():
+    """
+    Main method of the RaceControl application. From here, the configuration
+    files are read and all objects are created and connected and the server for
+    the web application is started. This script is installed on the target
+    machine's /usr/local/bin and can then be executed from the command line. Be
+    sure to execute racecontrol as superuser so the /var/www/loggings directory
+    is writable to store loggings under.
+    """
     print(
         """
         RaceControl  Copyright (C) 2016  Florian Eich

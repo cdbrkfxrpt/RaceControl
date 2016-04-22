@@ -1,0 +1,114 @@
+\hypertarget{classracecontrol_1_1netcom_1_1NetCom}{}\section{racecontrol.\+netcom.\+Net\+Com Class Reference}
+\label{classracecontrol_1_1netcom_1_1NetCom}\index{racecontrol.\+netcom.\+Net\+Com@{racecontrol.\+netcom.\+Net\+Com}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, prioritylist, ip=\textquotesingle{}192.\+168.\+11.\+26\textquotesingle{}, udpport=D\+\_\+\+P\+O\+RT, listeners=\mbox{[}$\,$\mbox{]}, node\+\_\+ips=N\+O\+D\+ES)\hypertarget{classracecontrol_1_1netcom_1_1NetCom_a3decf896d9d62b9a3fd06dffef2b3fe5}{}\label{classracecontrol_1_1netcom_1_1NetCom_a3decf896d9d62b9a3fd06dffef2b3fe5}
+
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetCom_a7b49efeb5e60231f5448f8650d84652c}{add\+\_\+listener} (self, listener)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetCom_abf3164ecfd214947921948b42d5a446e}{notify} (self, msg)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetCom_afa43456c9903324444b3d010376891f1}{add\+\_\+node} (self, node\+\_\+ip, last\+\_\+msg=None)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetCom_ae27f1bce1e6242c29b6e794019b9a67e}{ip\+\_\+list} (self)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetCom_aaf323cd72e9b4d5724b0268c54078894}{check\+\_\+nodes} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries ip}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_a655c019f1760dc2aeac17059daa9003e}{}\label{classracecontrol_1_1netcom_1_1NetCom_a655c019f1760dc2aeac17059daa9003e}
+
+\item 
+{\bfseries udpport}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_ab1de996cc0fbaa07ff432eb49111220a}{}\label{classracecontrol_1_1netcom_1_1NetCom_ab1de996cc0fbaa07ff432eb49111220a}
+
+\item 
+{\bfseries listeners}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_af65e46142c5376a0e20642b064daf791}{}\label{classracecontrol_1_1netcom_1_1NetCom_af65e46142c5376a0e20642b064daf791}
+
+\item 
+{\bfseries nodes}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_ab7425c0021edb0748e364bed18b0bdbd}{}\label{classracecontrol_1_1netcom_1_1NetCom_ab7425c0021edb0748e364bed18b0bdbd}
+
+\item 
+{\bfseries dispatcher}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_a7220c84e9eaf348fe1e11be8d29e2c7e}{}\label{classracecontrol_1_1netcom_1_1NetCom_a7220c84e9eaf348fe1e11be8d29e2c7e}
+
+\item 
+{\bfseries running}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_aec956fd7586eccce58253004e0e77f83}{}\label{classracecontrol_1_1netcom_1_1NetCom_aec956fd7586eccce58253004e0e77f83}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Handles UDP network communication.
+
+The NetCom class instantiates Node objects for all node IPs give in the
+config file and registers them. It then broadcasts the protocol message
+used to register with other nodes and starts threads for both the UDP
+server and the watchdog. The watchdog takes care of checking node activity
+and remove inactive nodes from the NetCom object's register.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\index{racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}!add\+\_\+listener@{add\+\_\+listener}}
+\index{add\+\_\+listener@{add\+\_\+listener}!racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}}
+\subsubsection[{\texorpdfstring{add\+\_\+listener(self, listener)}{add_listener(self, listener)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com.\+add\+\_\+listener (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{listener}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_a7b49efeb5e60231f5448f8650d84652c}{}\label{classracecontrol_1_1netcom_1_1NetCom_a7b49efeb5e60231f5448f8650d84652c}
+\begin{DoxyVerb}Adds can.Listeners to the NetCom object. These are notified by other
+objects with can.Message objects. If the listener added is not a
+can.Listener, a TypeError is raised.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}!add\+\_\+node@{add\+\_\+node}}
+\index{add\+\_\+node@{add\+\_\+node}!racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}}
+\subsubsection[{\texorpdfstring{add\+\_\+node(self, node\+\_\+ip, last\+\_\+msg=\+None)}{add_node(self, node_ip, last_msg=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com.\+add\+\_\+node (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{node\+\_\+ip, }
+\item[{}]{last\+\_\+msg = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_afa43456c9903324444b3d010376891f1}{}\label{classracecontrol_1_1netcom_1_1NetCom_afa43456c9903324444b3d010376891f1}
+\begin{DoxyVerb}Adds Node objects to the NetCom object.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}!check\+\_\+nodes@{check\+\_\+nodes}}
+\index{check\+\_\+nodes@{check\+\_\+nodes}!racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}}
+\subsubsection[{\texorpdfstring{check\+\_\+nodes(self)}{check_nodes(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com.\+check\+\_\+nodes (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_aaf323cd72e9b4d5724b0268c54078894}{}\label{classracecontrol_1_1netcom_1_1NetCom_aaf323cd72e9b4d5724b0268c54078894}
+\begin{DoxyVerb}Watchdog target method. Checks when a message was last received from
+all the nodes and removes Node objects from the NetCom object's
+register if they have been inactive for 5 seconds.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}!ip\+\_\+list@{ip\+\_\+list}}
+\index{ip\+\_\+list@{ip\+\_\+list}!racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}}
+\subsubsection[{\texorpdfstring{ip\+\_\+list(self)}{ip_list(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com.\+ip\+\_\+list (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_ae27f1bce1e6242c29b6e794019b9a67e}{}\label{classracecontrol_1_1netcom_1_1NetCom_ae27f1bce1e6242c29b6e794019b9a67e}
+\begin{DoxyVerb}Returns the IPs of all Node objects registered with the NetCom object.
+Used to return IP list externally.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}!notify@{notify}}
+\index{notify@{notify}!racecontrol\+::netcom\+::\+Net\+Com@{racecontrol\+::netcom\+::\+Net\+Com}}
+\subsubsection[{\texorpdfstring{notify(self, msg)}{notify(self, msg)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com.\+notify (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetCom_abf3164ecfd214947921948b42d5a446e}{}\label{classracecontrol_1_1netcom_1_1NetCom_abf3164ecfd214947921948b42d5a446e}
+\begin{DoxyVerb}Notifies objects from classes that implement the can.Listener interface
+with can.Message objects. Used when messages are received over the UDP
+connection.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/netcom.\+py\end{DoxyCompactItemize}

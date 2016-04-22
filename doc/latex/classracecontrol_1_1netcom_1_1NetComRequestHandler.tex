@@ -1,0 +1,49 @@
+\hypertarget{classracecontrol_1_1netcom_1_1NetComRequestHandler}{}\section{racecontrol.\+netcom.\+Net\+Com\+Request\+Handler Class Reference}
+\label{classracecontrol_1_1netcom_1_1NetComRequestHandler}\index{racecontrol.\+netcom.\+Net\+Com\+Request\+Handler@{racecontrol.\+netcom.\+Net\+Com\+Request\+Handler}}
+Inheritance diagram for racecontrol.\+netcom.\+Net\+Com\+Request\+Handler\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classracecontrol_1_1netcom_1_1NetComRequestHandler}
+\end{center}
+\end{figure}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1NetComRequestHandler_a78fc260655402d03147362ba756f885e}{handle} (self)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Inherits from socketserver.DatagramRequestHandler to handle UDP
+requests.
+
+For further information, read the handle() methods documentation or the
+Python library documentation for socketserver.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\index{racecontrol\+::netcom\+::\+Net\+Com\+Request\+Handler@{racecontrol\+::netcom\+::\+Net\+Com\+Request\+Handler}!handle@{handle}}
+\index{handle@{handle}!racecontrol\+::netcom\+::\+Net\+Com\+Request\+Handler@{racecontrol\+::netcom\+::\+Net\+Com\+Request\+Handler}}
+\subsubsection[{\texorpdfstring{handle(self)}{handle(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Net\+Com\+Request\+Handler.\+handle (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1NetComRequestHandler_a78fc260655402d03147362ba756f885e}{}\label{classracecontrol_1_1netcom_1_1NetComRequestHandler_a78fc260655402d03147362ba756f885e}
+\begin{DoxyVerb}This method reimplements the handle() method from
+socketserver.DatagramRequestHandler. It reads the incoming message.
+Through its own sender variable, it accesses the NetCom object
+associated with its UDP server object and checks if the source of the
+received message is in the node registry. If so, the timestamp for the
+node is reset and the message is filtered for protocol words, then
+passed to the NetCom object's notify() method. If not, the message is
+checked for protocol words. In case this check is successful, the
+source IP is passed to the NetCom object's add_node() method to
+register it and an appropriate response is generated and sent back to
+the source.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/netcom.\+py\end{DoxyCompactItemize}

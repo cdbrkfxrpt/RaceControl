@@ -1,0 +1,100 @@
+\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher}{}\section{racecontrol.\+netcom.\+Dispatcher Class Reference}
+\label{classracecontrol_1_1netcom_1_1Dispatcher}\index{racecontrol.\+netcom.\+Dispatcher@{racecontrol.\+netcom.\+Dispatcher}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, netcom, prioritylist, port=D\+\_\+\+P\+O\+RT, timeout=100)\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a40d53ebebdec4c628392f666ff14a4f4}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a40d53ebebdec4c628392f666ff14a4f4}
+
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1Dispatcher_a01b0f08e2145db578fe74208d5e34d9e}{priorityfilter} (self, msg)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1Dispatcher_a1972a5b40129984301084ff41eab5824}{dispatch} (self, payload)
+\item 
+def \hyperlink{classracecontrol_1_1netcom_1_1Dispatcher_ae54f350204273958e80248a56943fc0c}{operate} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries buffer}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a1b53b2fd4b2dbde0e3cc31a5416fbd2e}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a1b53b2fd4b2dbde0e3cc31a5416fbd2e}
+
+\item 
+{\bfseries prioritylist}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a5cafa237d7e25d70d330cc7a12f6c93a}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a5cafa237d7e25d70d330cc7a12f6c93a}
+
+\item 
+{\bfseries priority\+\_\+set}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a71685a4d695523d4485bda704f53ede9}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a71685a4d695523d4485bda704f53ede9}
+
+\item 
+{\bfseries netcom}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a7880baacf7b0928435ac9fe2088ac0ed}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a7880baacf7b0928435ac9fe2088ac0ed}
+
+\item 
+{\bfseries port}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a93f7c9e98ee6b191761b7f04ddf26261}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a93f7c9e98ee6b191761b7f04ddf26261}
+
+\item 
+{\bfseries sock}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_ac347291950368776556f36686d7c54d1}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_ac347291950368776556f36686d7c54d1}
+
+\item 
+{\bfseries timeout}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a0f007223f86688ce9fd62b8d44c428bc}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a0f007223f86688ce9fd62b8d44c428bc}
+
+\item 
+{\bfseries trigger}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a47286311bec7ca31f504296cc434866e}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a47286311bec7ca31f504296cc434866e}
+
+\item 
+{\bfseries running}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a91cf54434cc2b6fe4b66d5d0680e2229}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a91cf54434cc2b6fe4b66d5d0680e2229}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Handles dispatching can.Message objects over the UDP connection.
+
+The Dispatcher object is in charge of sending CAN messages over the UDP
+connection. It offers a priority_set variable which can be used to set
+priority mode. It also holds a can.BufferedReader receiving connections
+from other RaceControl objects. It starts a thread to operate the
+connection using the operate() method.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\index{racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}!dispatch@{dispatch}}
+\index{dispatch@{dispatch}!racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}}
+\subsubsection[{\texorpdfstring{dispatch(self, payload)}{dispatch(self, payload)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Dispatcher.\+dispatch (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{payload}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a1972a5b40129984301084ff41eab5824}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a1972a5b40129984301084ff41eab5824}
+\begin{DoxyVerb}Dispatches bytearrays to all nodes known to the NetCom object this
+Dispatcher object is connected to.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}!operate@{operate}}
+\index{operate@{operate}!racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}}
+\subsubsection[{\texorpdfstring{operate(self)}{operate(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Dispatcher.\+operate (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_ae54f350204273958e80248a56943fc0c}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_ae54f350204273958e80248a56943fc0c}
+\begin{DoxyVerb}Target for the thread. Reads messages from the message buffer and puts
+them into the priority filter. If they come back and are not empty, the
+operate() method puts them into the dispatch() method. Furthermore, it
+dispatches a register protocol messages to all nodes as a keepalive
+message every few seconds in case there are no CAN messages to be
+transmitted.
+\end{DoxyVerb}
+ \index{racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}!priorityfilter@{priorityfilter}}
+\index{priorityfilter@{priorityfilter}!racecontrol\+::netcom\+::\+Dispatcher@{racecontrol\+::netcom\+::\+Dispatcher}}
+\subsubsection[{\texorpdfstring{priorityfilter(self, msg)}{priorityfilter(self, msg)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+netcom.\+Dispatcher.\+priorityfilter (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{msg}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1netcom_1_1Dispatcher_a01b0f08e2145db578fe74208d5e34d9e}{}\label{classracecontrol_1_1netcom_1_1Dispatcher_a01b0f08e2145db578fe74208d5e34d9e}
+\begin{DoxyVerb}If priority_set is set to True, this method filters messages through
+the priority list and returns None if the message is not in the list.
+If priority_set is set to False, it returns the msg instantly.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/netcom.\+py\end{DoxyCompactItemize}

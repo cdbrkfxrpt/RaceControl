@@ -1,1 +1,1 @@
-/home/flrn/workbench/ConnectedRace/.vimrc
+/home/flrn/workbench/RaceControl/.vimrc

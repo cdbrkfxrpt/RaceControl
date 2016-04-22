@@ -26,6 +26,14 @@ from racecontrol.globals import DEVICE, CAN_IFACE, LOGDIR, FILEFORMAT
 
 
 class LogCom:
+    """Instatiates CSVLogger objects with user defined timestamps as filename
+    patterns.
+
+    The LogCom class, when instantiated, parses the input strings containing
+    the timestamping patterns for the logging filename through the arrow
+    library, which provides beautifully formatted strings with timestamps. It
+    then creates a CSVLogger object it uses to log messages to a file.
+    """
     def __init__(self, logdir=LOGDIR, fileformat=FILEFORMAT):
         if not logdir:
             print('Please specify a valid log directory name.')
@@ -57,7 +65,6 @@ class LogCom:
 
         os.chdir(self.logdir)
 
-        fileformat += '-' + CAN_IFACE
         fileformat += '-' + socket.gethostname()
 
         self.fileformat = fileformat
@@ -67,10 +74,25 @@ class LogCom:
                                     self.fileformat + '.csv')
 
     def loggers(self):
+        """
+        Function which returns the current loggers owned by the LogCom object.
+        The main function of the RaceControl package loops through this and
+        distributes the objects to the other application members. Loggers have
+        to implement the can.Listener interface for this to work.
+        """
         return [self.csv_logger]
 
 
 class CSVLogger(can.Listener):
+    """Implements the can.Listener interface and writes messages in RaceControl
+    CSV files.
+
+    This class implements the can.Listener interface, which makes it callable
+    from objects of the can.Notifier class with can.Message objects. On
+    instantiation, it sets a timeout counter for flushing to file in case the
+    file is downloaded intermittently and opens a file with user defined
+    filename.
+    """
     def __init__(self, device, interface, filename):
         self.device = device
         self.interface = interface
@@ -82,6 +104,11 @@ class CSVLogger(can.Listener):
 is_error_frame,arbitration_id,dlc,data\n')
 
     def on_message_received(self, msg):
+        """
+        Implements can.Listener's on_message_received method. Then proceeds to
+        join all elements in the can.Message object it gets passed into a
+        RaceControl CSV string and writes the string to file.
+        """
         row = ','.join(str(el) for el in [self.device,
                                           self.interface,
                                           msg.timestamp,
@@ -99,4 +126,10 @@ is_error_frame,arbitration_id,dlc,data\n')
             self.flushstamp = time.perf_counter()
 
     def __del__(self):
+        """
+        Standard method called when the interpreter's garbage collector picks
+        the object up. Since data is flushed via timeout and the garbage
+        collector should close the open file object eventually as well, this is
+        not technically necessary, but added for safety.
+        """
         self.file.close()

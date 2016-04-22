@@ -1,0 +1,105 @@
+\hypertarget{classracecontrol_1_1cancom_1_1CANCom}{}\section{racecontrol.\+cancom.\+C\+A\+N\+Com Class Reference}
+\label{classracecontrol_1_1cancom_1_1CANCom}\index{racecontrol.\+cancom.\+C\+A\+N\+Com@{racecontrol.\+cancom.\+C\+A\+N\+Com}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, blacklist, interface=C\+A\+N\+\_\+\+I\+F\+A\+CE, listeners=\mbox{[}$\,$\mbox{]})\hypertarget{classracecontrol_1_1cancom_1_1CANCom_ab985a1ec22be9cf57bccec3e400a1383}{}\label{classracecontrol_1_1cancom_1_1CANCom_ab985a1ec22be9cf57bccec3e400a1383}
+
+\item 
+def \hyperlink{classracecontrol_1_1cancom_1_1CANCom_a17217b9206b06bfb080a34df26bf3e50}{add\+\_\+listener} (self, listener)
+\item 
+def \hyperlink{classracecontrol_1_1cancom_1_1CANCom_ac7aa4f352f75d0e1581323d2c8fb0d74}{run\+\_\+notifier} (self, timeout=None)
+\item 
+def \hyperlink{classracecontrol_1_1cancom_1_1CANCom_a6433c22844fea3f3f65f3103528c732c}{stop\+\_\+notifier} (self)
+\item 
+def \hyperlink{classracecontrol_1_1cancom_1_1CANCom_a909c7508693465607a71003014a14ffc}{operate} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries blacklist}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a18b61f0fb38913869153e6d9d29722e5}{}\label{classracecontrol_1_1cancom_1_1CANCom_a18b61f0fb38913869153e6d9d29722e5}
+
+\item 
+{\bfseries bus}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a0d02fccc3ae1db96edf0ab37a63642ea}{}\label{classracecontrol_1_1cancom_1_1CANCom_a0d02fccc3ae1db96edf0ab37a63642ea}
+
+\item 
+{\bfseries interface}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a57730a29aa159916aaba10d8bef3e2f4}{}\label{classracecontrol_1_1cancom_1_1CANCom_a57730a29aa159916aaba10d8bef3e2f4}
+
+\item 
+{\bfseries listeners}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_ab5609d47b9144f9d53a71273d03deec6}{}\label{classracecontrol_1_1cancom_1_1CANCom_ab5609d47b9144f9d53a71273d03deec6}
+
+\item 
+{\bfseries buffer}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_ab2666668b9d321a5659448b044c8b607}{}\label{classracecontrol_1_1cancom_1_1CANCom_ab2666668b9d321a5659448b044c8b607}
+
+\item 
+{\bfseries notifier}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a13c3f606fc3ee8bafd78b2694d3133c4}{}\label{classracecontrol_1_1cancom_1_1CANCom_a13c3f606fc3ee8bafd78b2694d3133c4}
+
+\item 
+{\bfseries running}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_ad505d0df53d256b1d534952b07e10f63}{}\label{classracecontrol_1_1cancom_1_1CANCom_ad505d0df53d256b1d534952b07e10f63}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}CANCom class for establishing the CAN bus connection and
+sending/receiving on it.
+
+The CANCom class, when instantiated, establishes the CAN bus connection and
+starts a thread to transmit CAN data received from other application
+sources. It also instantiates a can.Notifier object which is itself a
+threaded listener on the CAN bus and connects it to the listeners it knows.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\index{racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}!add\+\_\+listener@{add\+\_\+listener}}
+\index{add\+\_\+listener@{add\+\_\+listener}!racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}}
+\subsubsection[{\texorpdfstring{add\+\_\+listener(self, listener)}{add_listener(self, listener)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+cancom.\+C\+A\+N\+Com.\+add\+\_\+listener (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{listener}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a17217b9206b06bfb080a34df26bf3e50}{}\label{classracecontrol_1_1cancom_1_1CANCom_a17217b9206b06bfb080a34df26bf3e50}
+\begin{DoxyVerb}Method to add a listener to a CANCom object. All listeners in a CANCom
+object are notified when a message is read from the bus.
+\end{DoxyVerb}
+ \index{racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}!operate@{operate}}
+\index{operate@{operate}!racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}}
+\subsubsection[{\texorpdfstring{operate(self)}{operate(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+cancom.\+C\+A\+N\+Com.\+operate (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a909c7508693465607a71003014a14ffc}{}\label{classracecontrol_1_1cancom_1_1CANCom_a909c7508693465607a71003014a14ffc}
+\begin{DoxyVerb}Method which is the target of the thread. It listens to the object's
+message buffer for messages from the other application members and, if
+there is a message, sends it to the CAN bus after filtering it with the
+blacklist.
+\end{DoxyVerb}
+ \index{racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}!run\+\_\+notifier@{run\+\_\+notifier}}
+\index{run\+\_\+notifier@{run\+\_\+notifier}!racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}}
+\subsubsection[{\texorpdfstring{run\+\_\+notifier(self, timeout=\+None)}{run_notifier(self, timeout=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+cancom.\+C\+A\+N\+Com.\+run\+\_\+notifier (
+\begin{DoxyParamCaption}
+\item[{}]{self, }
+\item[{}]{timeout = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_ac7aa4f352f75d0e1581323d2c8fb0d74}{}\label{classracecontrol_1_1cancom_1_1CANCom_ac7aa4f352f75d0e1581323d2c8fb0d74}
+\begin{DoxyVerb}Method to create a new Notifier on the CANCom object's bus. Returns an
+instantiated can.Notifier object. Used to create a new notifier object
+whenever a listener is added.
+\end{DoxyVerb}
+ \index{racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}!stop\+\_\+notifier@{stop\+\_\+notifier}}
+\index{stop\+\_\+notifier@{stop\+\_\+notifier}!racecontrol\+::cancom\+::\+C\+A\+N\+Com@{racecontrol\+::cancom\+::\+C\+A\+N\+Com}}
+\subsubsection[{\texorpdfstring{stop\+\_\+notifier(self)}{stop_notifier(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+cancom.\+C\+A\+N\+Com.\+stop\+\_\+notifier (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1cancom_1_1CANCom_a6433c22844fea3f3f65f3103528c732c}{}\label{classracecontrol_1_1cancom_1_1CANCom_a6433c22844fea3f3f65f3103528c732c}
+\begin{DoxyVerb}Method to stop the current notifier. Used whenever a listener is added
+to stop the old notifier so the thread won't become zombied in the
+interpreter.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/cancom.\+py\end{DoxyCompactItemize}

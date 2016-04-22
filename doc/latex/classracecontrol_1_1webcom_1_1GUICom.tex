@@ -1,0 +1,39 @@
+\hypertarget{classracecontrol_1_1webcom_1_1GUICom}{}\section{racecontrol.\+webcom.\+G\+U\+I\+Com Class Reference}
+\label{classracecontrol_1_1webcom_1_1GUICom}\index{racecontrol.\+webcom.\+G\+U\+I\+Com@{racecontrol.\+webcom.\+G\+U\+I\+Com}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, queue, msgfilter)\hypertarget{classracecontrol_1_1webcom_1_1GUICom_a06515a6004ff7f8554ea65483de9e684}{}\label{classracecontrol_1_1webcom_1_1GUICom_a06515a6004ff7f8554ea65483de9e684}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries queue}\hypertarget{classracecontrol_1_1webcom_1_1GUICom_aaee4be625caecf5e88a86c69b9672e8a}{}\label{classracecontrol_1_1webcom_1_1GUICom_aaee4be625caecf5e88a86c69b9672e8a}
+
+\item 
+{\bfseries msgfilter}\hypertarget{classracecontrol_1_1webcom_1_1GUICom_a9a7fb7d0154519fb4b4f9c50f206cb9c}{}\label{classracecontrol_1_1webcom_1_1GUICom_a9a7fb7d0154519fb4b4f9c50f206cb9c}
+
+\item 
+{\bfseries buffer}\hypertarget{classracecontrol_1_1webcom_1_1GUICom_a5cef744c84d93e37ef0d6726df5b7595}{}\label{classracecontrol_1_1webcom_1_1GUICom_a5cef744c84d93e37ef0d6726df5b7595}
+
+\item 
+{\bfseries permsg}\hypertarget{classracecontrol_1_1webcom_1_1GUICom_a1e1dadd40a811d3f91290cf827f92ec9}{}\label{classracecontrol_1_1webcom_1_1GUICom_a1e1dadd40a811d3f91290cf827f92ec9}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Gets can.Message objects and parses them through the msgfilter necessary
+to create web interface suited CSV data.
+
+The GUICom class has a threadsafe and processsafe queue it pushes the
+generated message to and a can.BufferedReader object which is notified by
+other RaceControl objects with can.Message objects. It starts a thread
+which runs the web interface data generator.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/webcom.\+py\end{DoxyCompactItemize}

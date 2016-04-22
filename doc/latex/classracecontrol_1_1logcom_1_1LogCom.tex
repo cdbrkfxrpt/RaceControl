@@ -1,0 +1,59 @@
+\hypertarget{classracecontrol_1_1logcom_1_1LogCom}{}\section{racecontrol.\+logcom.\+Log\+Com Class Reference}
+\label{classracecontrol_1_1logcom_1_1LogCom}\index{racecontrol.\+logcom.\+Log\+Com@{racecontrol.\+logcom.\+Log\+Com}}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries \+\_\+\+\_\+init\+\_\+\+\_\+} (self, logdir=L\+O\+G\+D\+IR, fileformat=F\+I\+L\+E\+F\+O\+R\+M\+AT)\hypertarget{classracecontrol_1_1logcom_1_1LogCom_a1b7430f202da41f27eb9d471fecd4cb4}{}\label{classracecontrol_1_1logcom_1_1LogCom_a1b7430f202da41f27eb9d471fecd4cb4}
+
+\item 
+def \hyperlink{classracecontrol_1_1logcom_1_1LogCom_a5cf7d193b6c1f32ebc5a5c6ea47cd76f}{loggers} (self)
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries device}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_ae44ae38fb3b18b6cdd7892d771029f86}{}\label{classracecontrol_1_1logcom_1_1LogCom_ae44ae38fb3b18b6cdd7892d771029f86}
+
+\item 
+{\bfseries interface}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_a29decd0250cfc7548f95b0855b1d1331}{}\label{classracecontrol_1_1logcom_1_1LogCom_a29decd0250cfc7548f95b0855b1d1331}
+
+\item 
+{\bfseries logdir}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_af2d649bd23fb2593cb5043afcd227cc9}{}\label{classracecontrol_1_1logcom_1_1LogCom_af2d649bd23fb2593cb5043afcd227cc9}
+
+\item 
+{\bfseries fileformat}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_ada32b5a1e4dbbf4ddd403609146b5524}{}\label{classracecontrol_1_1logcom_1_1LogCom_ada32b5a1e4dbbf4ddd403609146b5524}
+
+\item 
+{\bfseries csv\+\_\+logger}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_a5ab3a32ec26a4c6be022d3efda81f396}{}\label{classracecontrol_1_1logcom_1_1LogCom_a5ab3a32ec26a4c6be022d3efda81f396}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Instatiates CSVLogger objects with user defined timestamps as filename
+patterns.
+
+The LogCom class, when instantiated, parses the input strings containing
+the timestamping patterns for the logging filename through the arrow
+library, which provides beautifully formatted strings with timestamps. It
+then creates a CSVLogger object it uses to log messages to a file.
+\end{DoxyVerb}
+ 
+
+\subsection{Member Function Documentation}
+\index{racecontrol\+::logcom\+::\+Log\+Com@{racecontrol\+::logcom\+::\+Log\+Com}!loggers@{loggers}}
+\index{loggers@{loggers}!racecontrol\+::logcom\+::\+Log\+Com@{racecontrol\+::logcom\+::\+Log\+Com}}
+\subsubsection[{\texorpdfstring{loggers(self)}{loggers(self)}}]{\setlength{\rightskip}{0pt plus 5cm}def racecontrol.\+logcom.\+Log\+Com.\+loggers (
+\begin{DoxyParamCaption}
+\item[{}]{self}
+\end{DoxyParamCaption}
+)}\hypertarget{classracecontrol_1_1logcom_1_1LogCom_a5cf7d193b6c1f32ebc5a5c6ea47cd76f}{}\label{classracecontrol_1_1logcom_1_1LogCom_a5cf7d193b6c1f32ebc5a5c6ea47cd76f}
+\begin{DoxyVerb}Function which returns the current loggers owned by the LogCom object.
+The main function of the RaceControl package loops through this and
+distributes the objects to the other application members. Loggers have
+to implement the can.Listener interface for this to work.
+\end{DoxyVerb}
+ 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+racecontrol/logcom.\+py\end{DoxyCompactItemize}
