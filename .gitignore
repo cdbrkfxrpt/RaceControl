@@ -6,3 +6,11 @@ log.*
 .coverage
 *.egg-info
 *.egg-info/*
+*.aux
+*.log
+*.out
+*.idx
+*.toc
+*.ilg
+*.ind
+refman.pdf
