@@ -81,8 +81,6 @@ directly).
 
 `nginx` must be configured thusly:
 
-    worker_processes  4;
-
     events {
         worker_connections  1024;
     }
@@ -90,19 +88,10 @@ directly).
     http {
         include       mime.types;
         default_type  application/octet-stream;
-        sendfile        on;
-        keepalive_timeout  65;
 
         server {
             listen       80;
-            server_name  hideo.racecontrol;
-            root /home/flrn/workbench/RaceWeb;
-
-            charset utf-8;
-            client_max_body_size 100M;
-
-            access_log  /var/log/nginx/access.log;
-            error_log /var/log/nginx/error.log;
+            server_name  your.racecontrol.server;
 
             location ^~ /loggings {
               alias /var/www/loggings/;
@@ -124,14 +113,16 @@ directly).
                 proxy_buffering off;
                 proxy_cache off;
             }
-
-            # redirect server error pages to the static page /50x.html
-            error_page   500 502 503 504  /50x.html;
-            location = /50x.html {
-                root   /usr/share/nginx/html;
-            }
         }
     }
 
-This is the complete `nginx` configuration, ready to be copied and pasted to
-your device's `/etc/nginx/nginx.conf`.
+This is not a complete `nginx` configuration. Please see the default nginx.conf
+for details.
+
+In order to make your system plug and play, it is suggested to have the init
+system (`systemd`, `runit`, ...) start `nginx` and also `RaceControl`. Chances
+are `nginx` already  exists as a `systemd`-service in your system (if it uses
+`systemd`; otherwise, consult the corresponding documentation) and you only
+need to enable it (`sudo systemctl enable nginx`) after installing. For
+`RaceControl`, you have to create a service. Please consult the documentation
+of your init system for details.
