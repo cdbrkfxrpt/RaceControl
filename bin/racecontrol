@@ -94,18 +94,19 @@ class RaceControl:
             msgfilter[textid][offset]['name'] = sig._name
             offset += 1
 
-        cancomd = cancom.CANCom(blacklist)
-        netcomd = netcom.NetCom(priority)
-        logcomd = logcom.LogCom()
-        webcomd = webcom.GUICom(webcom.msgqueue, msgfilter)
+        self.cancomd = cancom.CANCom(blacklist)
+        self.netcomd = netcom.NetCom(priority)
+        self.logcomd = logcom.LogCom()
+        self.webcomd = webcom.WebCom()
+        self.guicomd = webcom.GUICom(self.webcomd.msgqueue, msgfilter)
 
-        cancomd.add_listener(netcomd.dispatcher.buffer)
-        cancomd.add_listener(webcomd.buffer)
-        netcomd.add_listener(cancomd.buffer)
+        self.cancomd.add_listener(self.netcomd.dispatcher.buffer)
+        self.cancomd.add_listener(self.guicomd.buffer)
+        self.netcomd.add_listener(self.cancomd.buffer)
 
-        for listener in logcomd.loggers():
-            cancomd.add_listener(listener)
-            netcomd.add_listener(listener)
+        for listener in self.logcomd.loggers():
+            self.cancomd.add_listener(listener)
+            self.netcomd.add_listener(listener)
 
     def run(self):
         """
@@ -118,8 +119,8 @@ class RaceControl:
         loggings under.
         """
         try:
-            webcom.app.debug = True
-            server = wsgi.WSGIServer(("", 5000), webcom.app)
+            self.webcomd.app.debug = True
+            server = wsgi.WSGIServer(("", 5000), self.webcomd.app)
             server.serve_forever()
         except KeyboardInterrupt:
             print('\nExiting RaceControl.')
