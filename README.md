@@ -45,7 +45,7 @@ on this see _Install and Setup_.
 What doesn't it do?
 --
 It doesn't guarantee full data integrity. More precisely, it doesn't guarantee
-to preserver message order or to even fully cover data. Realistically, you can
+to preserve message order or to even fully cover data. Realistically, you can
 expect it to log about 20% of bus load on a 1MBit/s CAN bus. Furthermore, it
 specifically doesn't provide a sophisticated data analysis user interface. The
 data analysis interface it provides is very basic. You are provided with a CSV
@@ -77,9 +77,18 @@ install the missing modules. Elsewhere, just get the code for your kernel
 (`uname -a`) from [kernel.org](https://www.kernel.org) and build and install
 using that (the `rpi-source` page has tutorials for this which are helpful even
 if you're not using `rpi-source` but are compiling from kernel code downloaded
-directly).
+directly). As soon as you have these modules compiled and installed and loading
+on boot (put them in a file called `/etc/modules-load.d/can.conf` for this,
+with each module name on a new line), you can use the scripts provided in this
+package to start. `vcan_start` starts the virtual CAN interface, `slcan_start`
+starts the serial CAN interface. `slcan_start` has to be provided with two
+arguments specifying bus speed and and interface name of your choosing (for
+more information on the bus speed, execute `slcan_start` without arguments on
+the command line).
 
-`nginx` must be configured thusly:
+As for the web server: I recommend you use `nginx`, although any other web
+server capable of proxying WSGI applications should work. `nginx`, if you are
+using it, must be configured thusly:
 
     events {
         worker_connections  1024;
@@ -126,3 +135,11 @@ are `nginx` already  exists as a `systemd`-service in your system (if it uses
 need to enable it (`sudo systemctl enable nginx`) after installing. For
 `RaceControl`, you have to create a service. Please consult the documentation
 of your init system for details.
+
+Further Information
+--
+This documentation contains only information concerning the Python backend of
+RaceControl. Please refer to [the Twitter Bootstrap
+documentation](http://getbootstrap.com/) for information concerning the HTML in
+use, and to the code itself located in `racecontrol/static/js/raceflot.js`,
+which has been heavily commented, for information concerning the JavaScript.

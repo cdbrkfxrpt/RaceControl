@@ -1,9 +1,75 @@
-If you\textquotesingle{}ve ever had to operate any vehicle carrying data on the C\+AN bus, there\textquotesingle{}s a fair chance that you have been forced to use closed source, limited capability tools. This is my B\+Sc project, maybe it can serve as the basis for something else, maybe you\textquotesingle{}re just interested. Enjoy.
+Controller Are Network (C\+AN) bus is a data transportation system widely used in the automotive and aerospace industry because it is robust and simple. It features
+\begin{DoxyItemize}
+\item data transmission over twisted pair cable which gives it very good electromagnetic immunity without additional shielding
+\item daisy chaining is possible if done correctly
+\item an exceedingly low residual failure probability of {\itshape message\+\_\+error\+\_\+rate $\ast$ 4.\+7 $\ast$ 10$^\wedge$-\/11} and it implements the physical and the data link layer in the O\+SI model. For more information, the {\tt official Bosch document} has it. Another good source is the {\tt C\+AN bus Wikipedia page}.
+\end{DoxyItemize}
 
-todo\+: licensing
+If you\textquotesingle{}ve ever had to operate any vehicle carrying data on the C\+AN bus, there\textquotesingle{}s a fair chance that you have been required to use licensed, closed source, non adaptable software. There are open source programming libraries available ({\ttfamily socketcan} and {\ttfamily can4linux} are the best known examples, but there is more), but starting this deep down may be cumbersome to you or you just want to (or have to) get something running quickly. In any case, the licensed tools are still widely used and in fairness well supported, but generally bundled with hardware and, by trend, rather expensive.
+
+{\ttfamily Race\+Control} provides a free and open source alternative that runs on Linux, thus leaving the choice of hardware to you (it\textquotesingle{}s tested on Raspberry Pi, Raspberry Pi 2 and several Intel C\+PU based laptops). It uses {\ttfamily socketcan}, which means the choice of C\+AN adapter is also left to you as long as it\textquotesingle{}s supported by {\ttfamily socketcan}.
+
+\subsection*{What does it do? }
+
+{\ttfamily Race\+Control} logs C\+AN data to files, the name of which you can specify through the configuration file, and it provides data as a web service to be consumed by your browser. That means you can use more or less any device to look at your data (small screens don\textquotesingle{}t work as well for plots and currently, they don\textquotesingle{}t resize either, so you may want to use something upward of i\+Pad size). The data it provides via web service is also configurable via D\+BC files, uploaded to the {\ttfamily .config/racecontrol/dbc} directory, which sits in the home directory of the user you are running {\ttfamily Race\+Control} as. Your loggings can be accessed through a browser as well, given that your {\ttfamily nginx} is also configured correctly. For more on this see {\itshape Install and Setup}.
+
+\subsection*{What doesn\textquotesingle{}t it do? }
+
+It doesn\textquotesingle{}t guarantee full data integrity. More precisely, it doesn\textquotesingle{}t guarantee to preserve message order or to even fully cover data. Realistically, you can expect it to log about 20\% of bus load on a 1\+M\+Bit/s C\+AN bus. Furthermore, it specifically doesn\textquotesingle{}t provide a sophisticated data analysis user interface. The data analysis interface it provides is very basic. You are provided with a C\+SV file to read into a data analysis tool of your own choosing.
+
+\subsection*{How is it licensed? }
+
+It uses the G\+NU Public License version 3.
 
 \section*{Install }
 
-When it\textquotesingle{}s done\+: {\ttfamily python setup.\+py install}
+When in the project directory, execute {\ttfamily sudo pip3 install .} (or alternatively {\ttfamily python3 setup.\+py install}) to install it and its dependencies for your local {\ttfamily python3}.
 
-Right now, it\textquotesingle{}s still a work in progress. 
+\subsection*{C\+AN bus and web server }
+
+For it to work, you need to fire up your C\+AN interfaces and configure your {\ttfamily nginx} web server. The C\+AN interfaces, aside from the hardware need the Linux kernel modules called {\ttfamily can} and {\ttfamily can-\/raw} and if you\textquotesingle{}re using a serial C\+AN interface also {\ttfamily slcan}. {\ttfamily vcan} provides a virtual C\+AN interface to be used on machines where no C\+AN hardware is installed and of course for testing. Other modules for different drivers are also available; please consult the respective documentation for your system. On a Raspbian, you need the tool {\tt {\ttfamily rpi-\/source}} to download, build and install the missing modules. Elsewhere, just get the code for your kernel ({\ttfamily uname -\/a}) from {\tt kernel.\+org} and build and install using that (the {\ttfamily rpi-\/source} page has tutorials for this which are helpful even if you\textquotesingle{}re not using {\ttfamily rpi-\/source} but are compiling from kernel code downloaded directly). As soon as you have these modules compiled and installed and loading on boot (put them in a file called {\ttfamily /etc/modules-\/load.d/can.\+conf} for this, with each module name on a new line), you can use the scripts provided in this package to start. {\ttfamily vcan\+\_\+start} starts the virtual C\+AN interface, {\ttfamily slcan\+\_\+start} starts the serial C\+AN interface. {\ttfamily slcan\+\_\+start} has to be provided with two arguments specifying bus speed and and interface name of your choosing (for more information on the bus speed, execute {\ttfamily slcan\+\_\+start} without arguments on the command line).
+
+As for the web server\+: I recommend you use {\ttfamily nginx}, although any other web server capable of proxying W\+S\+GI applications should work. {\ttfamily nginx}, if you are using it, must be configured thusly\+: \begin{DoxyVerb}events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    server {
+        listen       80;
+        server_name  your.racecontrol.server;
+
+        location ^~ /loggings {
+          alias /var/www/loggings/;
+          autoindex on;
+        }
+
+        location / {
+            proxy_pass      http://127.0.0.1:5000/;
+            proxy_redirect  off;
+
+            proxy_set_header Host           $host;
+            proxy_set_header X-Real-IP      $remote_addr;
+            proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+
+            proxy_set_header Connection '';
+            proxy_http_version 1.1;
+            chunked_transfer_encoding off;
+
+            proxy_buffering off;
+            proxy_cache off;
+        }
+    }
+}
+\end{DoxyVerb}
+
+
+This is not a complete {\ttfamily nginx} configuration. Please see the default nginx.\+conf for details.
+
+In order to make your system plug and play, it is suggested to have the init system ({\ttfamily systemd}, {\ttfamily runit}, ...) start {\ttfamily nginx} and also {\ttfamily Race\+Control}. Chances are {\ttfamily nginx} already exists as a {\ttfamily systemd}-\/service in your system (if it uses {\ttfamily systemd}; otherwise, consult the corresponding documentation) and you only need to enable it ({\ttfamily sudo systemctl enable nginx}) after installing. For {\ttfamily Race\+Control}, you have to create a service. Please consult the documentation of your init system for details.
+
+\subsection*{Further Information }
+
+This documentation contains only information concerning the Python backend of Race\+Control. Please refer to {\tt the Twitter Bootstrap documentation} for information concerning the H\+T\+ML in use, and to the code itself located in {\ttfamily racecontrol/static/js/raceflot.\+js}, which has been heavily commented, for information concerning the Java\+Script. 

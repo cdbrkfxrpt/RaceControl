@@ -121,6 +121,8 @@ class WebCom:
                         data = self.msgqueue.get(True)
                         if data:
                             print(data)
+                        # for line in open('/home/flrn/sandbox/tests/gendata.csv'):
+                        #     data = 'data: ' + line + '\n'
                             yield data
                 except GeneratorExit:
                     self.subscriptions.remove(0)

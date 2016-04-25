@@ -80,11 +80,61 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">About </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>If you've ever had to operate any vehicle carrying data on the CAN bus, there's a fair chance that you have been forced to use closed source, limited capability tools. This is my BSc project, maybe it can serve as the basis for something else, maybe you're just interested. Enjoy.</p>
-<p>todo: licensing</p>
+<div class="textblock"><p>Controller Are Network (CAN) bus is a data transportation system widely used in the automotive and aerospace industry because it is robust and simple. It features</p><ul>
+<li>data transmission over twisted pair cable which gives it very good electromagnetic immunity without additional shielding</li>
+<li>daisy chaining is possible if done correctly</li>
+<li>an exceedingly low residual failure probability of <em>message_error_rate * 4.7 * 10^-11</em> and it implements the physical and the data link layer in the OSI model. For more information, the <a href="http://www.bosch-semiconductors.de/media/ubk_semiconductors/pdf_1/canliteratur/can2spec.pdf">official Bosch document</a> has it. Another good source is the <a href="https://en.wikipedia.org/wiki/CAN_bus">CAN bus Wikipedia page</a>.</li>
+</ul>
+<p>If you've ever had to operate any vehicle carrying data on the CAN bus, there's a fair chance that you have been required to use licensed, closed source, non adaptable software. There are open source programming libraries available (<code>socketcan</code> and <code>can4linux</code> are the best known examples, but there is more), but starting this deep down may be cumbersome to you or you just want to (or have to) get something running quickly. In any case, the licensed tools are still widely used and in fairness well supported, but generally bundled with hardware and, by trend, rather expensive.</p>
+<p><code>RaceControl</code> provides a free and open source alternative that runs on Linux, thus leaving the choice of hardware to you (it's tested on Raspberry Pi, Raspberry Pi 2 and several Intel CPU based laptops). It uses <code>socketcan</code>, which means the choice of CAN adapter is also left to you as long as it's supported by <code>socketcan</code>.</p>
+<h2>What does it do? </h2>
+<p><code>RaceControl</code> logs CAN data to files, the name of which you can specify through the configuration file, and it provides data as a web service to be consumed by your browser. That means you can use more or less any device to look at your data (small screens don't work as well for plots and currently, they don't resize either, so you may want to use something upward of iPad size). The data it provides via web service is also configurable via DBC files, uploaded to the <code>.config/racecontrol/dbc</code> directory, which sits in the home directory of the user you are running <code>RaceControl</code> as. Your loggings can be accessed through a browser as well, given that your <code>nginx</code> is also configured correctly. For more on this see <em>Install and Setup</em>.</p>
+<h2>What doesn't it do? </h2>
+<p>It doesn't guarantee full data integrity. More precisely, it doesn't guarantee to preserve message order or to even fully cover data. Realistically, you can expect it to log about 20% of bus load on a 1MBit/s CAN bus. Furthermore, it specifically doesn't provide a sophisticated data analysis user interface. The data analysis interface it provides is very basic. You are provided with a CSV file to read into a data analysis tool of your own choosing.</p>
+<h2>How is it licensed? </h2>
+<p>It uses the GNU Public License version 3.</p>
 <h1>Install </h1>
-<p>When it's done: <code>python setup.py install</code></p>
-<p>Right now, it's still a work in progress. </p>
+<p>When in the project directory, execute <code>sudo pip3 install .</code> (or alternatively <code>python3 setup.py install</code>) to install it and its dependencies for your local <code>python3</code>.</p>
+<h2>CAN bus and web server </h2>
+<p>For it to work, you need to fire up your CAN interfaces and configure your <code>nginx</code> web server. The CAN interfaces, aside from the hardware need the Linux kernel modules called <code>can</code> and <code>can-raw</code> and if you're using a serial CAN interface also <code>slcan</code>. <code>vcan</code> provides a virtual CAN interface to be used on machines where no CAN hardware is installed and of course for testing. Other modules for different drivers are also available; please consult the respective documentation for your system. On a Raspbian, you need the tool <a href="https://github.com/notro/rpi-source/wiki"><code>rpi-source</code></a> to download, build and install the missing modules. Elsewhere, just get the code for your kernel (<code>uname -a</code>) from <a href="https://www.kernel.org">kernel.org</a> and build and install using that (the <code>rpi-source</code> page has tutorials for this which are helpful even if you're not using <code>rpi-source</code> but are compiling from kernel code downloaded directly). As soon as you have these modules compiled and installed and loading on boot (put them in a file called <code>/etc/modules-load.d/can.conf</code> for this, with each module name on a new line), you can use the scripts provided in this package to start. <code>vcan_start</code> starts the virtual CAN interface, <code>slcan_start</code> starts the serial CAN interface. <code>slcan_start</code> has to be provided with two arguments specifying bus speed and and interface name of your choosing (for more information on the bus speed, execute <code>slcan_start</code> without arguments on the command line).</p>
+<p>As for the web server: I recommend you use <code>nginx</code>, although any other web server capable of proxying WSGI applications should work. <code>nginx</code>, if you are using it, must be configured thusly: </p><pre class="fragment">events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    server {
+        listen       80;
+        server_name  your.racecontrol.server;
+
+        location ^~ /loggings {
+          alias /var/www/loggings/;
+          autoindex on;
+        }
+
+        location / {
+            proxy_pass      http://127.0.0.1:5000/;
+            proxy_redirect  off;
+
+            proxy_set_header Host           $host;
+            proxy_set_header X-Real-IP      $remote_addr;
+            proxy_set_header X-Forwared-For $proxy_add_x_forwarded_for;
+
+            proxy_set_header Connection '';
+            proxy_http_version 1.1;
+            chunked_transfer_encoding off;
+
+            proxy_buffering off;
+            proxy_cache off;
+        }
+    }
+}
+</pre><p>This is not a complete <code>nginx</code> configuration. Please see the default nginx.conf for details.</p>
+<p>In order to make your system plug and play, it is suggested to have the init system (<code>systemd</code>, <code>runit</code>, ...) start <code>nginx</code> and also <code>RaceControl</code>. Chances are <code>nginx</code> already exists as a <code>systemd</code>-service in your system (if it uses <code>systemd</code>; otherwise, consult the corresponding documentation) and you only need to enable it (<code>sudo systemctl enable nginx</code>) after installing. For <code>RaceControl</code>, you have to create a service. Please consult the documentation of your init system for details.</p>
+<h2>Further Information </h2>
+<p>This documentation contains only information concerning the Python backend of RaceControl. Please refer to <a href="http://getbootstrap.com/">the Twitter Bootstrap documentation</a> for information concerning the HTML in use, and to the code itself located in <code>racecontrol/static/js/raceflot.js</code>, which has been heavily commented, for information concerning the JavaScript. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

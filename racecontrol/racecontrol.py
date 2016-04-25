@@ -42,7 +42,8 @@ class RaceControl:
             """
         )
 
-        configpath = os.path.expanduser('~/.config/racecontrol')
+        # configpath = os.path.expanduser('~/.config/racecontrol')
+        configpath = '/home/flrn/.config/racecontrol'
         if not os.path.exists(configpath):
             print('Creating ~/.config/racecontrol and copying default config.')
             os.makedirs(configpath)
@@ -51,15 +52,17 @@ class RaceControl:
 
         dbcpath = configpath + '/dbc'
         if not os.path.exists(dbcpath):
-            print('''Creating ~/.config/racecontrol/dbc. Please place your DBC
-                    files here.''')
+            print('Creating ~/.config/racecontrol/dbc.')
             os.makedirs(dbcpath)
 
-        blacklistdbc = im.importany(configpath + '/dbc/blacklist.dbc')
-        prioritydbc = im.importany(configpath + '/dbc/priority.dbc')
-        guiupperdbc = im.importany(configpath + '/dbc/guiupper.dbc')
-        guilowerdbc = im.importany(configpath + '/dbc/guilower.dbc')
-        guitextdbc = im.importany(configpath + '/dbc/guitext.dbc')
+        try:
+            blacklistdbc = im.importany(dbcpath + '/blacklist.dbc')
+            prioritydbc = im.importany(dbcpath + '/priority.dbc')
+            guiupperdbc = im.importany(dbcpath + '/guiupper.dbc')
+            guilowerdbc = im.importany(dbcpath + '/guilower.dbc')
+            guitextdbc = im.importany(dbcpath + '/guitext.dbc')
+        except FileNotFoundError:
+            pass
 
         blacklist = [frame._Id for frame in blacklistdbc._fl._list]
         priority = [frame._Id for frame in prioritydbc._fl._list]
