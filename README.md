@@ -4,11 +4,11 @@ Controller Are Network (CAN) bus is a data transportation system widely used in
 the automotive and aerospace industry because it is robust and simple. It
 features
 
-+ data transmission over twisted pair cable which gives it very good
-electromagnetic immunity without additional shielding
-+ daisy chaining is possible if done correctly
-+ an exceedingly low residual failure probability of
-_message_error_rate * 4.7 * 10^-11_
+* data transmission over twisted pair cable which gives it very good
+  electromagnetic immunity without additional shielding
+* daisy chaining is possible if done correctly
+* an exceedingly low residual failure probability of
+  _message_error_rate * 4.7 * 10^-11_
 
 and it implements the physical and the data link layer in the OSI model. For
 more information, the
