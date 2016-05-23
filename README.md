@@ -55,7 +55,7 @@ file to read into a data analysis tool of your own choosing.
 
 How is it licensed?
 --
-It uses the GNU Public License version 3.
+It uses the Apache License v2.0.
 
 
 
