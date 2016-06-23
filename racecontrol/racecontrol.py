@@ -55,11 +55,11 @@ class RaceControl:
             os.makedirs(dbcpath)
 
         try:
-            blacklistdbc = im.importany(dbcpath + '/blacklist.dbc')
-            prioritydbc = im.importany(dbcpath + '/priority.dbc')
-            guiupperdbc = im.importany(dbcpath + '/guiupper.dbc')
-            guilowerdbc = im.importany(dbcpath + '/guilower.dbc')
-            guitextdbc = im.importany(dbcpath + '/guitext.dbc')
+            blacklistdbc = im.importany(dbcpath + '/blacklist.dbc')['']
+            prioritydbc = im.importany(dbcpath + '/priority.dbc')['']
+            guiupperdbc = im.importany(dbcpath + '/guiupper.dbc')['']
+            guilowerdbc = im.importany(dbcpath + '/guilower.dbc')['']
+            guitextdbc = im.importany(dbcpath + '/guitext.dbc')['']
         except FileNotFoundError:
             pass
 
